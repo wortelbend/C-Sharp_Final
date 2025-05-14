@@ -1,4 +1,4 @@
 Test\
 Form1 add \
-            ChatForm chatForm = new ChatForm();\
-            chatForm.Show();\
+ChatForm chatForm = new ChatForm();\
+chatForm.Show();
