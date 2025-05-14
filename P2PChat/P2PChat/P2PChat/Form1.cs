@@ -14,7 +14,8 @@ namespace P2PChat
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            ChatForm chatForm = new ChatForm();
+            chatForm.Show();
         }
     }
 }
