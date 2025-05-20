@@ -40,60 +40,67 @@
             // lblClientIP
             // 
             lblClientIP.AutoSize = true;
-            lblClientIP.Location = new Point(47, 51);
+            lblClientIP.Font = new Font("Microsoft JhengHei UI", 16F);
+            lblClientIP.Location = new Point(12, 58);
             lblClientIP.Name = "lblClientIP";
-            lblClientIP.Size = new Size(42, 15);
+            lblClientIP.Size = new Size(75, 28);
             lblClientIP.TabIndex = 0;
-            lblClientIP.Text = "label1";
-            lblClientIP.Click += label1_Click;
+            lblClientIP.Text = "IP位址";
+            lblClientIP.Click += btnEnableTCP_Click;
             // 
             // txtClientIP
             // 
-            txtClientIP.Location = new Point(95, 48);
+            txtClientIP.Font = new Font("Microsoft JhengHei UI", 16F);
+            txtClientIP.Location = new Point(105, 55);
             txtClientIP.Name = "txtClientIP";
-            txtClientIP.Size = new Size(100, 23);
+            txtClientIP.Size = new Size(153, 35);
             txtClientIP.TabIndex = 1;
             // 
             // lblClientPORT
             // 
             lblClientPORT.AutoSize = true;
-            lblClientPORT.Location = new Point(295, 49);
+            lblClientPORT.Font = new Font("Microsoft JhengHei UI", 16F);
+            lblClientPORT.Location = new Point(307, 62);
             lblClientPORT.Name = "lblClientPORT";
-            lblClientPORT.Size = new Size(42, 15);
+            lblClientPORT.Size = new Size(56, 28);
             lblClientPORT.TabIndex = 2;
-            lblClientPORT.Text = "label2";
+            lblClientPORT.Text = "閘道";
             // 
             // txtClientPORT
             // 
-            txtClientPORT.Location = new Point(343, 48);
+            txtClientPORT.Font = new Font("Microsoft JhengHei UI", 16F);
+            txtClientPORT.Location = new Point(369, 58);
             txtClientPORT.Name = "txtClientPORT";
-            txtClientPORT.Size = new Size(100, 23);
+            txtClientPORT.Size = new Size(134, 35);
             txtClientPORT.TabIndex = 3;
             // 
             // btnEnableTCP
             // 
-            btnEnableTCP.Location = new Point(95, 86);
+            btnEnableTCP.Font = new Font("Microsoft JhengHei UI", 16F);
+            btnEnableTCP.Location = new Point(95, 159);
             btnEnableTCP.Name = "btnEnableTCP";
-            btnEnableTCP.Size = new Size(75, 23);
+            btnEnableTCP.Size = new Size(129, 54);
             btnEnableTCP.TabIndex = 4;
-            btnEnableTCP.Text = "button1";
+            btnEnableTCP.Text = "啟用IP";
             btnEnableTCP.UseVisualStyleBackColor = true;
             // 
             // btnDisableTCP
             // 
-            btnDisableTCP.Location = new Point(343, 86);
+            btnDisableTCP.Font = new Font("Microsoft JhengHei UI", 16F);
+            btnDisableTCP.Location = new Point(343, 159);
             btnDisableTCP.Name = "btnDisableTCP";
-            btnDisableTCP.Size = new Size(75, 23);
+            btnDisableTCP.Size = new Size(144, 54);
             btnDisableTCP.TabIndex = 5;
-            btnDisableTCP.Text = "button2";
+            btnDisableTCP.Text = "關閉程式";
             btnDisableTCP.UseVisualStyleBackColor = true;
             // 
             // txtClientConnect
             // 
             txtClientConnect.AutoSize = true;
-            txtClientConnect.Location = new Point(47, 132);
+            txtClientConnect.Font = new Font("Microsoft JhengHei UI", 16F);
+            txtClientConnect.Location = new Point(56, 238);
             txtClientConnect.Name = "txtClientConnect";
-            txtClientConnect.Size = new Size(42, 15);
+            txtClientConnect.Size = new Size(75, 28);
             txtClientConnect.TabIndex = 6;
             txtClientConnect.Text = "label3";
             // 
