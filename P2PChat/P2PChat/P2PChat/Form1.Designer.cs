@@ -93,6 +93,7 @@
             btnDisableTCP.TabIndex = 5;
             btnDisableTCP.Text = "關閉程式";
             btnDisableTCP.UseVisualStyleBackColor = true;
+            btnDisableTCP.Click += btnDisableTCP_Click;
             // 
             // txtClientConnect
             // 
