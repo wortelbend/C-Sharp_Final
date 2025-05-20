@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Threading;
+using P2PChat; // 加入這個 using 指令，以便引用 P2PChat 命名空間下的 ChatForm
 
 namespace P2PServer
 {
@@ -137,7 +138,15 @@ namespace P2PServer
                         progressForm.Close();
                     }
                     MessageBox.Show("客戶端已連接", "連接成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
+
+                    // 開啟伺服器聊天視窗
+                    ChatForm serverChatForm = new ChatForm(client, this); // 將接受到的 TcpClient 和當前 serverForm1 實例傳入
+                    serverChatForm.Show();
+                    this.Hide(); // 隱藏伺服器監聽視窗
+
+                    // TODO: 在此處處理客戶端與伺服器之間的通訊
+                    // 目前只是接受連線，實際的聊天邏輯還需要在此處或新的方法中實現
+                    // break; // 如果需要支援多個客戶端需要修改此處，這裡為了簡單演示單客戶端連線，先保留 break
                 }
             }
             catch (Exception ex)
@@ -178,11 +187,6 @@ namespace P2PServer
                     }
                 }
             }
-        }
-
-        private void btndisbleServerTCP_Click(object sender, EventArgs e)
-        {
-            
         }
     }
 }
