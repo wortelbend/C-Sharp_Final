@@ -169,5 +169,10 @@ namespace P2PChat
                 }
             }
         }
+
+        private void btnDisableTCP_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
