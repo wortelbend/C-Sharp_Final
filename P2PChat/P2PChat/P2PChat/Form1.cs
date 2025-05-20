@@ -18,20 +18,20 @@ namespace P2PChat
         {
             InitializeComponent();
             InitializeTimer();
-            // ½T«O«ö¶s¨Æ¥ó¸j©w
+            // ç¢ºä¿æŒ‰éˆ•äº‹ä»¶ç¶å®š
             btnEnableTCP.Click += new EventHandler(btnEnableTCP_Click);
         }
 
         private void InitializeTimer()
         {
             connectionTimer = new System.Windows.Forms.Timer();
-            connectionTimer.Interval = 1000; // 1¬í
+            connectionTimer.Interval = 1000; // 1ç§’
             connectionTimer.Tick += ConnectionTimer_Tick;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            // ªí³æ¸ü¤J®Éªºªì©l¤Æ
+            // è¡¨å–®è¼‰å…¥æ™‚çš„åˆå§‹åŒ–
             btnEnableTCP.Enabled = true;
             txtClientIP.Text = "";
             txtClientPORT.Text = "";
@@ -45,12 +45,12 @@ namespace P2PChat
                 Height = 150,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 StartPosition = FormStartPosition.CenterScreen,
-                Text = "³s±µ¤¤"
+                Text = "é€£æ¥ä¸­"
             };
 
             Label lblProgress = new Label
             {
-                Text = $"¥¿¦b³s±µ¦øªA¾¹...\n³Ñ¾l®É¶¡¡G{remainingSeconds}¬í",
+                Text = $"æ­£åœ¨é€£æ¥ä¼ºæœå™¨...\nå‰©é¤˜æ™‚é–“ï¼š{remainingSeconds}ç§’",
                 AutoSize = true,
                 Location = new Point(20, 20)
             };
@@ -64,7 +64,7 @@ namespace P2PChat
             if (progressForm != null && !progressForm.IsDisposed)
             {
                 Label lblProgress = (Label)progressForm.Controls[0];
-                lblProgress.Text = $"¥¿¦b³s±µ¦øªA¾¹...\n³Ñ¾l®É¶¡¡G{remainingSeconds}¬í";
+                lblProgress.Text = $"æ­£åœ¨é€£æ¥ä¼ºæœå™¨...\nå‰©é¤˜æ™‚é–“ï¼š{remainingSeconds}ç§’";
             }
         }
 
@@ -72,23 +72,23 @@ namespace P2PChat
         {
             if (string.IsNullOrEmpty(txtClientIP.Text) || string.IsNullOrEmpty(txtClientPORT.Text))
             {
-                MessageBox.Show("½Ğ¿é¤JIP¦a§}©MPort", "¿ù»~", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("è«‹è¼¸å…¥IPåœ°å€å’ŒPort", "éŒ¯èª¤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             try
             {
-                // ¶}©l³s±µ­p®É
+                // é–‹å§‹é€£æ¥è¨ˆæ™‚
                 remainingSeconds = 30;
                 connectionTimer.Start();
                 btnEnableTCP.Enabled = false;
                 ShowProgressForm();
 
-                // ¹Á¸Õ³s±µ
+                // å˜—è©¦é€£æ¥
                 tcpClient = new TcpClient();
                 var connectTask = tcpClient.ConnectAsync(txtClientIP.Text, int.Parse(txtClientPORT.Text));
 
-                // µ¥«İ³s±µ§¹¦¨©Î¶W®É
+                // ç­‰å¾…é€£æ¥å®Œæˆæˆ–è¶…æ™‚
                 using (var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(30)))
                 {
                     try
@@ -97,10 +97,10 @@ namespace P2PChat
 
                         if (!connectTask.IsCompleted)
                         {
-                            throw new TimeoutException("³s±µ¶W®É");
+                            throw new TimeoutException("é€£æ¥è¶…æ™‚");
                         }
 
-                        // ÀË¬d³s±µ¬O§_¯uªº¦¨¥\
+                        // æª¢æŸ¥é€£æ¥æ˜¯å¦çœŸçš„æˆåŠŸ
                         if (!tcpClient.Connected)
                         {
                             throw new SocketException((int)SocketError.ConnectionRefused);
@@ -108,28 +108,28 @@ namespace P2PChat
                     }
                     catch (OperationCanceledException)
                     {
-                        throw new TimeoutException("³s±µ¶W®É");
+                        throw new TimeoutException("é€£æ¥è¶…æ™‚");
                     }
                     catch (SocketException ex)
                     {
                         if (ex.SocketErrorCode == SocketError.ConnectionRefused)
                         {
-                            throw new Exception("¦øªA¾¹¥¼±Ò°Ê©Î©Úµ´³s±µ");
+                            throw new Exception("ä¼ºæœå™¨æœªå•Ÿå‹•æˆ–æ‹’çµ•é€£æ¥");
                         }
                         throw;
                     }
                 }
 
-                // ¦pªG¦¨¥\³s±µ
+                // å¦‚æœæˆåŠŸé€£æ¥
                 connectionTimer.Stop();
                 if (progressForm != null && !progressForm.IsDisposed)
                 {
                     progressForm.Close();
                 }
-                MessageBox.Show("¤w¸g¦¨¥\³s±µ", "¦¨¥\", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("é€£ç·šå·²æ¥å—", "æˆåŠŸ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // ¶}±Ò²á¤Ñµøµ¡
-                ChatForm chatForm = new ChatForm();
+                // é–‹å•ŸèŠå¤©è¦–çª—ï¼Œä¸¦å°‡å·²é€£æ¥çš„ tcpClient å‚³å…¥
+                ChatForm chatForm = new ChatForm(tcpClient, this);
                 chatForm.Show();
                 this.Hide();
             }
@@ -141,7 +141,7 @@ namespace P2PChat
                 {
                     progressForm.Close();
                 }
-                MessageBox.Show($"³s±µ¥¢±Ñ¡G{ex.Message}", "¿ù»~", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"é€£æ¥å¤±æ•—ï¼š{ex.Message}", "éŒ¯èª¤", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -164,7 +164,7 @@ namespace P2PChat
                 if (progressForm != null && !progressForm.IsDisposed)
                 {
                     Label lblProgress = (Label)progressForm.Controls[0];
-                    lblProgress.Text = "¦øªA¾¹µL¦^À³";
+                    lblProgress.Text = "ä¼ºæœå™¨ç„¡å›æ‡‰";
                     lblProgress.ForeColor = Color.Red;
                 }
             }
