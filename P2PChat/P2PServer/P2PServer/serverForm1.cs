@@ -188,5 +188,10 @@ namespace P2PServer
                 }
             }
         }
+
+        private void btndisbleServerTCP_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
