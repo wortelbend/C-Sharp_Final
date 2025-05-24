@@ -51,7 +51,7 @@
             this.txtServerIP.Font = new System.Drawing.Font("新細明體", 16F);
             this.txtServerIP.Location = new System.Drawing.Point(145, 138);
             this.txtServerIP.Name = "txtServerIP";
-            this.txtServerIP.Size = new System.Drawing.Size(168, 33);
+            this.txtServerIP.Size = new System.Drawing.Size(204, 33);
             this.txtServerIP.TabIndex = 1;
             // 
             // txtServerPORT
@@ -59,7 +59,7 @@
             this.txtServerPORT.Font = new System.Drawing.Font("新細明體", 16F);
             this.txtServerPORT.Location = new System.Drawing.Point(479, 141);
             this.txtServerPORT.Name = "txtServerPORT";
-            this.txtServerPORT.Size = new System.Drawing.Size(172, 33);
+            this.txtServerPORT.Size = new System.Drawing.Size(208, 33);
             this.txtServerPORT.TabIndex = 3;
             // 
             // label2
@@ -75,11 +75,11 @@
             // btnEnableServerTCP
             // 
             this.btnEnableServerTCP.Font = new System.Drawing.Font("新細明體", 16F);
-            this.btnEnableServerTCP.Location = new System.Drawing.Point(145, 230);
+            this.btnEnableServerTCP.Location = new System.Drawing.Point(152, 230);
             this.btnEnableServerTCP.Name = "btnEnableServerTCP";
-            this.btnEnableServerTCP.Size = new System.Drawing.Size(161, 57);
+            this.btnEnableServerTCP.Size = new System.Drawing.Size(197, 82);
             this.btnEnableServerTCP.TabIndex = 4;
-            this.btnEnableServerTCP.Text = "啟用IP";
+            this.btnEnableServerTCP.Text = "進行監聽";
             this.btnEnableServerTCP.UseVisualStyleBackColor = true;
             // 
             // btndisbleServerTCP
@@ -87,7 +87,7 @@
             this.btndisbleServerTCP.Font = new System.Drawing.Font("新細明體", 16F);
             this.btndisbleServerTCP.Location = new System.Drawing.Point(479, 230);
             this.btndisbleServerTCP.Name = "btndisbleServerTCP";
-            this.btndisbleServerTCP.Size = new System.Drawing.Size(162, 57);
+            this.btndisbleServerTCP.Size = new System.Drawing.Size(198, 82);
             this.btndisbleServerTCP.TabIndex = 5;
             this.btndisbleServerTCP.Text = "關閉程式";
             this.btndisbleServerTCP.UseVisualStyleBackColor = true;
@@ -105,7 +105,7 @@
             this.Controls.Add(this.txtServerIP);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "伺服器登入畫面";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
