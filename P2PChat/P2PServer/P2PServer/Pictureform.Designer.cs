@@ -33,76 +33,84 @@ namespace P2PServer
         /// </summary>
         private void InitializeComponent()
         {
-            pictureBox1 = new PictureBox();
-            btnPCpicture = new Button();
-            btnlinkpicture = new Button();
-            btnsend = new Button();
-            btncancel = new Button();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            SuspendLayout();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnPCpicture = new System.Windows.Forms.Button();
+            this.btnlinkpicture = new System.Windows.Forms.Button();
+            this.btnsend = new System.Windows.Forms.Button();
+            this.btncancel = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(12, 2);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(776, 349);
-            pictureBox1.TabIndex = 0;
-            pictureBox1.TabStop = false;
+            this.pictureBox1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.pictureBox1.Location = new System.Drawing.Point(10, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(665, 279);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // btnPCpicture
             // 
-            btnPCpicture.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnPCpicture.Location = new Point(12, 370);
-            btnPCpicture.Name = "btnPCpicture";
-            btnPCpicture.Size = new Size(169, 55);
-            btnPCpicture.TabIndex = 1;
-            btnPCpicture.Text = "選擇本機圖片";
-            btnPCpicture.UseVisualStyleBackColor = true;
+            this.btnPCpicture.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.btnPCpicture.Location = new System.Drawing.Point(10, 296);
+            this.btnPCpicture.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPCpicture.Name = "btnPCpicture";
+            this.btnPCpicture.Size = new System.Drawing.Size(158, 44);
+            this.btnPCpicture.TabIndex = 1;
+            this.btnPCpicture.Text = "選擇本機圖片";
+            this.btnPCpicture.UseVisualStyleBackColor = true;
             // 
             // btnlinkpicture
             // 
-            btnlinkpicture.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnlinkpicture.Location = new Point(187, 370);
-            btnlinkpicture.Name = "btnlinkpicture";
-            btnlinkpicture.Size = new Size(169, 55);
-            btnlinkpicture.TabIndex = 1;
-            btnlinkpicture.Text = "上傳圖片連結";
-            btnlinkpicture.UseVisualStyleBackColor = true;
+            this.btnlinkpicture.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.btnlinkpicture.Location = new System.Drawing.Point(174, 296);
+            this.btnlinkpicture.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnlinkpicture.Name = "btnlinkpicture";
+            this.btnlinkpicture.Size = new System.Drawing.Size(159, 44);
+            this.btnlinkpicture.TabIndex = 1;
+            this.btnlinkpicture.Text = "上傳圖片連結";
+            this.btnlinkpicture.UseVisualStyleBackColor = true;
             // 
             // btnsend
             // 
-            btnsend.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnsend.Location = new Point(471, 370);
-            btnsend.Name = "btnsend";
-            btnsend.Size = new Size(135, 55);
-            btnsend.TabIndex = 1;
-            btnsend.Text = "傳送";
-            btnsend.UseVisualStyleBackColor = true;
+            this.btnsend.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.btnsend.Location = new System.Drawing.Point(453, 296);
+            this.btnsend.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnsend.Name = "btnsend";
+            this.btnsend.Size = new System.Drawing.Size(116, 44);
+            this.btnsend.TabIndex = 1;
+            this.btnsend.Text = "傳送";
+            this.btnsend.UseVisualStyleBackColor = true;
             // 
             // btncancel
             // 
-            btncancel.Font = new Font("Microsoft JhengHei UI", 16F);
-            btncancel.Location = new Point(671, 370);
-            btncancel.Name = "btncancel";
-            btncancel.Size = new Size(117, 55);
-            btncancel.TabIndex = 1;
-            btncancel.Text = "取消";
-            btncancel.UseVisualStyleBackColor = true;
+            this.btncancel.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.btncancel.Location = new System.Drawing.Point(575, 296);
+            this.btncancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btncancel.Name = "btncancel";
+            this.btncancel.Size = new System.Drawing.Size(100, 44);
+            this.btncancel.TabIndex = 1;
+            this.btncancel.Text = "取消";
+            this.btncancel.UseVisualStyleBackColor = true;
             // 
-            // formpicture
+            // Pictureform
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(btncancel);
-            Controls.Add(btnsend);
-            Controls.Add(btnlinkpicture);
-            Controls.Add(btnPCpicture);
-            Controls.Add(pictureBox1);
-            Name = "formpicture";
-            Text = "選擇傳送圖片";
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ResumeLayout(false);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(686, 360);
+            this.Controls.Add(this.btncancel);
+            this.Controls.Add(this.btnsend);
+            this.Controls.Add(this.btnlinkpicture);
+            this.Controls.Add(this.btnPCpicture);
+            this.Controls.Add(this.pictureBox1);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Name = "Pictureform";
+            this.Text = "選擇傳送圖片";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.ResumeLayout(false);
+
         }
 
         #endregion
