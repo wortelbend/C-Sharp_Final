@@ -34,14 +34,13 @@
             txtClientPORT = new TextBox();
             btnEnableTCP = new Button();
             btnDisableTCP = new Button();
-            txtClientConnect = new Label();
             SuspendLayout();
             // 
             // lblClientIP
             // 
             lblClientIP.AutoSize = true;
             lblClientIP.Font = new Font("Microsoft JhengHei UI", 16F);
-            lblClientIP.Location = new Point(12, 58);
+            lblClientIP.Location = new Point(106, 152);
             lblClientIP.Name = "lblClientIP";
             lblClientIP.Size = new Size(75, 28);
             lblClientIP.TabIndex = 0;
@@ -51,16 +50,16 @@
             // txtClientIP
             // 
             txtClientIP.Font = new Font("Microsoft JhengHei UI", 16F);
-            txtClientIP.Location = new Point(105, 55);
+            txtClientIP.Location = new Point(199, 149);
             txtClientIP.Name = "txtClientIP";
-            txtClientIP.Size = new Size(153, 35);
+            txtClientIP.Size = new Size(207, 35);
             txtClientIP.TabIndex = 1;
             // 
             // lblClientPORT
             // 
             lblClientPORT.AutoSize = true;
             lblClientPORT.Font = new Font("Microsoft JhengHei UI", 16F);
-            lblClientPORT.Location = new Point(307, 62);
+            lblClientPORT.Location = new Point(433, 152);
             lblClientPORT.Name = "lblClientPORT";
             lblClientPORT.Size = new Size(56, 28);
             lblClientPORT.TabIndex = 2;
@@ -69,48 +68,37 @@
             // txtClientPORT
             // 
             txtClientPORT.Font = new Font("Microsoft JhengHei UI", 16F);
-            txtClientPORT.Location = new Point(369, 58);
+            txtClientPORT.Location = new Point(495, 149);
             txtClientPORT.Name = "txtClientPORT";
-            txtClientPORT.Size = new Size(134, 35);
+            txtClientPORT.Size = new Size(198, 35);
             txtClientPORT.TabIndex = 3;
             // 
             // btnEnableTCP
             // 
             btnEnableTCP.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnEnableTCP.Location = new Point(95, 159);
+            btnEnableTCP.Location = new Point(199, 249);
             btnEnableTCP.Name = "btnEnableTCP";
-            btnEnableTCP.Size = new Size(129, 54);
+            btnEnableTCP.Size = new Size(183, 93);
             btnEnableTCP.TabIndex = 4;
-            btnEnableTCP.Text = "啟用IP";
+            btnEnableTCP.Text = "進行連線";
             btnEnableTCP.UseVisualStyleBackColor = true;
             // 
             // btnDisableTCP
             // 
             btnDisableTCP.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnDisableTCP.Location = new Point(343, 159);
+            btnDisableTCP.Location = new Point(495, 249);
             btnDisableTCP.Name = "btnDisableTCP";
-            btnDisableTCP.Size = new Size(144, 54);
+            btnDisableTCP.Size = new Size(198, 93);
             btnDisableTCP.TabIndex = 5;
             btnDisableTCP.Text = "關閉程式";
             btnDisableTCP.UseVisualStyleBackColor = true;
             btnDisableTCP.Click += btnDisableTCP_Click;
-            // 
-            // txtClientConnect
-            // 
-            txtClientConnect.AutoSize = true;
-            txtClientConnect.Font = new Font("Microsoft JhengHei UI", 16F);
-            txtClientConnect.Location = new Point(56, 238);
-            txtClientConnect.Name = "txtClientConnect";
-            txtClientConnect.Size = new Size(75, 28);
-            txtClientConnect.TabIndex = 6;
-            txtClientConnect.Text = "label3";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(txtClientConnect);
             Controls.Add(btnDisableTCP);
             Controls.Add(btnEnableTCP);
             Controls.Add(txtClientPORT);
@@ -118,7 +106,7 @@
             Controls.Add(txtClientIP);
             Controls.Add(lblClientIP);
             Name = "Form1";
-            Text = "Form1";
+            Text = "客戶端登入畫面";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -132,6 +120,5 @@
         private TextBox txtClientPORT;
         private Button btnEnableTCP;
         private Button btnDisableTCP;
-        private Label txtClientConnect;
     }
 }

@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Collections;
+using System.IO;
 
 namespace P2PChat
 {
@@ -42,20 +43,7 @@ namespace P2PChat
         {
             InitializeComponent();
             InitializeNetwork();
-            // 為發送按鈕和文本框的 Enter 事件添加處理器
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
-            this.txtMessage.KeyDown += new KeyEventHandler(this.txtMessage_KeyDown);
-
-            // 假設存在 btnchat1, btnchat2, btnchat3 和 txtchat1, txtchat2, txtchat3 並添加事件處理器
-            // 請根據您的實際控制項名稱和類型進行調整或確認
-            // 例如：this.btnchat1.Click += new System.EventHandler(this.btnchat1_Click);
-            //       this.btnchat2.Click += new System.EventHandler(this.btnchat2_Click);
-            //       this.btnchat3.Click += new System.EventHandler(this.btnchat3_Click);
-
-            // 添加 btnchat1, btnchat2, btnchat3 的事件處理器
-            if (btnchat1 != null) this.btnchat1.Click += new System.EventHandler(this.btnchat_Click);
-            if (btnchat2 != null) this.btnchat2.Click += new System.EventHandler(this.btnchat_Click);
-            if (btnchat3 != null) this.btnchat3.Click += new System.EventHandler(this.btnchat_Click);
+            SetupEventHandlers();
         }
 
         // 新增一個建構子，接收一個已連接的 TcpClient 物件
@@ -64,15 +52,6 @@ namespace P2PChat
             InitializeComponent();
             _connectedClient = connectedClient;
 
-            // 禁用監聽和連接按鈕，因為連線已建立
-            if (btnListen != null) btnListen.Enabled = false;
-            if (btnConnect != null) btnConnect.Enabled = false;
-            // 禁用 IP/Port 輸入框
-            if (txtLocalIP != null) txtLocalIP.Enabled = false;
-            if (txtLocalPort != null) txtLocalPort.Enabled = false;
-            if (txtRemoteIP != null) txtRemoteIP.Enabled = false;
-            if (txtRemotePort != null) txtRemotePort.Enabled = false;
-
             // 啟動接收訊息的執行緒
             thrReceiver = new Thread(new ThreadStart(ReceiverThread));
             thrReceiver.IsBackground = true; // 設定為背景執行緒
@@ -80,17 +59,7 @@ namespace P2PChat
 
             AppendMessage("連線成功！");
 
-            // 為發送按鈕和文本框的 Enter 事件添加處理器
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
-            this.txtMessage.KeyDown += new KeyEventHandler(this.txtMessage_KeyDown);
-
-            // 為斷開連接按鈕添加事件處理器
-            if (btndisconnect != null) this.btndisconnect.Click += new System.EventHandler(this.btndisconnect_Click);
-
-            // 添加 btnchat1, btnchat2, btnchat3 的事件處理器
-            if (btnchat1 != null) this.btnchat1.Click += new System.EventHandler(this.btnchat_Click);
-            if (btnchat2 != null) this.btnchat2.Click += new System.EventHandler(this.btnchat_Click);
-            if (btnchat3 != null) this.btnchat3.Click += new System.EventHandler(this.btnchat_Click);
+            SetupEventHandlers();
         }
 
         // 新增一個建構子，接收一個已連接的 TcpClient 物件和父視窗參考
@@ -100,15 +69,6 @@ namespace P2PChat
             _connectedClient = connectedClient;
             _parentForm = parentForm; // 儲存父視窗參考
 
-            // 禁用監聽和連接按鈕，因為連線已建立
-            if (btnListen != null) btnListen.Enabled = false;
-            if (btnConnect != null) btnConnect.Enabled = false;
-            // 禁用 IP/Port 輸入框
-            if (txtLocalIP != null) txtLocalIP.Enabled = false;
-            if (txtLocalPort != null) txtLocalPort.Enabled = false;
-            if (txtRemoteIP != null) txtRemoteIP.Enabled = false;
-            if (txtRemotePort != null) txtRemotePort.Enabled = false;
-
             // 啟動接收訊息的執行緒
             thrReceiver = new Thread(new ThreadStart(ReceiverThread));
             thrReceiver.IsBackground = true; // 設定為背景執行緒
@@ -116,17 +76,7 @@ namespace P2PChat
 
             AppendMessage("連線成功！");
 
-            // 為發送按鈕和文本框的 Enter 事件添加處理器
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
-            this.txtMessage.KeyDown += new KeyEventHandler(this.txtMessage_KeyDown);
-
-            // 為斷開連接按鈕添加事件處理器
-            if (btndisconnect != null) this.btndisconnect.Click += new System.EventHandler(this.btndisconnect_Click);
-
-            // 添加 btnchat1, btnchat2, btnchat3 的事件處理器
-            if (btnchat1 != null) this.btnchat1.Click += new System.EventHandler(this.btnchat_Click);
-            if (btnchat2 != null) this.btnchat2.Click += new System.EventHandler(this.btnchat_Click);
-            if (btnchat3 != null) this.btnchat3.Click += new System.EventHandler(this.btnchat_Click);
+            SetupEventHandlers();
         }
 
         private void InitializeNetwork()
@@ -135,20 +85,19 @@ namespace P2PChat
             strHostname = Dns.GetHostName();
             ipaLocal = Dns.Resolve(strHostname).AddressList[0];
             strLocalIP = ipaLocal.ToString();
-            txtLocalIP.Text = strLocalIP;
-            txtLocalPort.Text = localPort.ToString();
-            txtRemoteIP.Text = strLocalIP;
-            txtRemotePort.Text = remotePort.ToString();
         }
 
-        private void btnListen_Click(object sender, EventArgs e)
+        private void SetupEventHandlers()
         {
-            MessageBox.Show("連線已建立，無需再次監聽", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
+            btnSend.Click += btnSend_Click;
+            txtMessage.KeyDown += txtMessage_KeyDown;
+            btnclear.Click += btnclear_Click;
+            btndisconnect.Click += btndisconnect_Click;
+            btnpicture.Click += btnpicture_Click;  // 添加圖片按鈕事件
 
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("連線已建立，無需再次連接", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (btnchat1 != null) btnchat1.Click += btnchat_Click;
+            if (btnchat2 != null) btnchat2.Click += btnchat_Click;
+            if (btnchat3 != null) btnchat3.Click += btnchat_Click;
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -171,50 +120,43 @@ namespace P2PChat
         private void btnchat_Click(object sender, EventArgs e)
         {
             Button clickedButton = sender as Button;
+            if (clickedButton == null) return;
+
             string predefinedMessage = "";
-
-            if (clickedButton != null)
+            switch (clickedButton.Name)
             {
-                // 根據按鈕的名稱獲取對應的文本框內容
-                switch (clickedButton.Name)
-                {
-                    case "btnchat1":
-                        if (txtchat1 != null) predefinedMessage = txtchat1.Text;
-                        break;
-                    case "btnchat2":
-                        if (txtchat2 != null) predefinedMessage = txtchat2.Text;
-                        break;
-                    case "btnchat3":
-                        if (txtchat3 != null) predefinedMessage = txtchat3.Text;
-                        break;
-                }
+                case "btnchat1":
+                    if (txtchat1 != null && !txtchat1.IsDisposed)
+                        predefinedMessage = txtchat1.Text;
+                    break;
+                case "btnchat2":
+                    if (txtchat2 != null && !txtchat2.IsDisposed)
+                        predefinedMessage = txtchat2.Text;
+                    break;
+                case "btnchat3":
+                    if (txtchat3 != null && !txtchat3.IsDisposed)
+                        predefinedMessage = txtchat3.Text;
+                    break;
+            }
 
-                // 如果獲取到了預設文字且連接有效，則發送訊息
-                if (!string.IsNullOrEmpty(predefinedMessage))
+            if (string.IsNullOrEmpty(predefinedMessage)) return;
+
+            if (_connectedClient != null && _connectedClient.Connected)
+            {
+                try
                 {
-                    // 使用傳入的 _connectedClient 來發送訊息
-                    try
-                    {
-                        byte[] data = Encoding.Unicode.GetBytes(predefinedMessage);
-                        if (_connectedClient != null && _connectedClient.Connected)
-                        {
-                            _connectedClient.GetStream().Write(data, 0, data.Length);
-                            AppendMessage("我: " + predefinedMessage); // 發送方自己顯示訊息
-                        }
-                        else
-                        {
-                            MessageBox.Show("未連接到對方，無法發送訊息", "發送失敗", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("發送失敗: " + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    byte[] data = Encoding.Unicode.GetBytes(predefinedMessage);
+                    _connectedClient.GetStream().Write(data, 0, data.Length);
+                    AppendMessage("我: " + predefinedMessage);
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("預設文字內容為空", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("發送失敗: " + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            else
+            {
+                MessageBox.Show("未連接到對方，無法發送訊息", "發送失敗", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -232,21 +174,36 @@ namespace P2PChat
                 if (_connectedClient != null && _connectedClient.Connected)
                 {
                     _connectedClient.GetStream().Write(data, 0, data.Length); // 使用 GetStream() 獲取 NetworkStream
-                    AppendMessage("我: " + message); // 發送方自己顯示訊息
-                    txtMessage.Clear();
+
+                    // 如果是圖片訊息，不顯示在聊天記錄中
+                    if (!message.StartsWith("<IMAGE>"))
+                    {
+                        AppendMessage("我: " + message); // 發送方自己顯示訊息
+                    }
+
+                    if (!message.StartsWith("<IMAGE>"))
+                    {
+                        txtMessage.Clear();
+                    }
                 }
                 // 保留原有的 Socket 邏輯作為後備 (如果沒有使用帶 TcpClient 的建構子)
                 else if (isConnected) // 客戶端模式 (雖然在 serverchat 中，但如果作為客戶端連線時使用)
                 {
                     sktConnect.Send(data);
-                    AppendMessage("我: " + message); // 發送方自己顯示訊息
-                    txtMessage.Clear();
+                    if (!message.StartsWith("<IMAGE>"))
+                    {
+                        AppendMessage("我: " + message); // 發送方自己顯示訊息
+                        txtMessage.Clear();
+                    }
                 }
                 else if (sktClient != null && sktClient.Connected) // 伺服器模式（接受單個客戶端）
                 {
                     sktClient.Send(data);
-                    AppendMessage("我: " + message); // 發送方自己顯示訊息
-                    txtMessage.Clear();
+                    if (!message.StartsWith("<IMAGE>"))
+                    {
+                        AppendMessage("我: " + message); // 發送方自己顯示訊息
+                        txtMessage.Clear();
+                    }
                 }
                 else
                 {
@@ -279,90 +236,169 @@ namespace P2PChat
             }
         }
 
+        private StringBuilder receiveBuffer = new StringBuilder();
+
         private void ReceiverThread()
         {
-            // 使用傳入的 _connectedClient 的 NetworkStream 接收訊息
             if (_connectedClient == null || !_connectedClient.Connected)
             {
                 AppendMessage("接收執行緒啟動失敗：未建立連接");
-                // 在沒有有效連接時，確保執行緒退出
                 return;
             }
 
             NetworkStream stream = _connectedClient.GetStream();
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096]; // 緩衝區
 
             try
             {
-                // 只有當連接有效且視窗未處置時才繼續接收
                 while (_connectedClient.Connected && !this.IsDisposed)
                 {
                     int received = stream.Read(buffer, 0, buffer.Length);
                     if (received > 0)
                     {
-                        string message = Encoding.Unicode.GetString(buffer, 0, received);
-                        // 檢查是否收到斷開連接訊息
-                        if (message == "<DISCONNECT>")
+                        string part = Encoding.Unicode.GetString(buffer, 0, received);
+                        receiveBuffer.Append(part);
+
+                        string bufferStr = receiveBuffer.ToString();
+
+                        // 處理所有 <IMAGE>...</IMAGE> 圖片訊息
+                        while (bufferStr.Contains("<IMAGE>") && bufferStr.Contains("</IMAGE>"))
                         {
-                            AppendMessage("對方已經斷開連接");
-                            // 收到斷開訊息後，安全地關閉連接和執行緒
-                            // 這裡不再直接關閉視窗，而是依賴 FormClosing 事件或外部呼叫來處理關閉邏輯
-                            // 關閉本地連接
-                            if (_connectedClient != null)
+                            int imgStart = bufferStr.IndexOf("<IMAGE>");
+                            int imgEnd = bufferStr.IndexOf("</IMAGE>");
+                            if (imgStart != -1 && imgEnd != -1 && imgEnd > imgStart)
                             {
-                                try { _connectedClient.Close(); } catch { }
-                                _connectedClient = null;
-                            }
-                            // 禁用發送功能，停留在頁面
-                            this.Invoke((MethodInvoker)delegate {
-                                if (!this.IsDisposed && !this.Disposing && txtMessage != null && btnSend != null)
+                                // <IMAGE>前面如果有純文字，先顯示出來
+                                string beforeImg = bufferStr.Substring(0, imgStart);
+                                if (!string.IsNullOrWhiteSpace(beforeImg))
                                 {
-                                    txtMessage.Enabled = false;
-                                    btnSend.Enabled = false;
+                                    AppendMessage("對方: " + beforeImg);
                                 }
-                                // 禁用預設訊息按鈕
-                                if (btnchat1 != null && !btnchat1.IsDisposed) btnchat1.Enabled = false;
-                                if (btnchat2 != null && !btnchat2.IsDisposed) btnchat2.Enabled = false;
-                                if (btnchat3 != null && !btnchat3.IsDisposed) btnchat3.Enabled = false;
-                            });
-                            break; // 退出接收循環
+
+                                // 抓出這段圖片訊息
+                                string imageMessage = bufferStr.Substring(imgStart, imgEnd + 8 - imgStart);
+                                string base64Image = imageMessage.Substring(7, imageMessage.Length - 15);
+                                byte[] imageBytes = Convert.FromBase64String(base64Image);
+
+                                // 1. 顯示圖片
+                                this.Invoke((Action)(() =>
+                                {
+                                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                                    {
+                                        if (pictureBox1.Image != null)
+                                            pictureBox1.Image.Dispose();
+                                        pictureBox1.Image = Image.FromStream(ms);
+                                        pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                                    }
+                                }));
+
+                                // 2. 在 rtbMessages 顯示提示
+                                AppendMessage("對方傳送了圖片");
+
+                                // 處理剩下未處理的訊息
+                                bufferStr = bufferStr.Substring(imgEnd + 8);
+                                receiveBuffer.Clear();
+                                receiveBuffer.Append(bufferStr);
+                            }
+                            else
+                            {
+                                // 目前buffer不足一個完整圖片訊息
+                                break;
+                            }
                         }
-                        else
+
+                        // 處理圖片連結
+                        if (bufferStr.Contains("<IMAGE_URL>") && bufferStr.Contains("</IMAGE_URL>"))
                         {
-                            AppendMessage("對方: " + message);
+                            int urlStart = bufferStr.IndexOf("<IMAGE_URL>");
+                            int urlEnd = bufferStr.IndexOf("</IMAGE_URL>");
+                            if (urlStart != -1 && urlEnd != -1 && urlEnd > urlStart)
+                            {
+                                // 提取圖片連結
+                                string imageUrl = bufferStr.Substring(urlStart + 11, urlEnd - urlStart - 11);
+
+                                try
+                                {
+                                    // 下載並顯示圖片
+                                    using (WebClient client = new WebClient())
+                                    {
+                                        byte[] imageBytes = client.DownloadData(imageUrl);
+                                        this.Invoke((Action)(() =>
+                                        {
+                                            using (MemoryStream ms = new MemoryStream(imageBytes))
+                                            {
+                                                if (pictureBox1.Image != null)
+                                                    pictureBox1.Image.Dispose();
+                                                pictureBox1.Image = Image.FromStream(ms);
+                                                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                                            }
+                                        }));
+                                    }
+                                    AppendMessage("對方傳送了圖片連結");
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show("圖片連結處理失敗: " + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+
+                                // 處理剩下未處理的訊息
+                                bufferStr = bufferStr.Substring(urlEnd + 12);
+                                receiveBuffer.Clear();
+                                receiveBuffer.Append(bufferStr);
+                            }
+                        }
+
+                        // 剩下不是圖片的都視為純文字，顯示在聊天視窗
+                        if (!bufferStr.Contains("<IMAGE>") && !string.IsNullOrWhiteSpace(bufferStr))
+                        {
+                            // 避免 <DISCONNECT> 等特殊指令
+                            if (bufferStr.Trim() == "<DISCONNECT>")
+                            {
+                                AppendMessage("對方已經斷開連接");
+                                if (_connectedClient != null)
+                                {
+                                    try { _connectedClient.Close(); } catch { }
+                                    _connectedClient = null;
+                                }
+                                DisableControls();
+                                receiveBuffer.Clear();
+                                break;
+                            }
+                            else
+                            {
+                                AppendMessage("對方: " + bufferStr);
+                                receiveBuffer.Clear();
+                            }
                         }
                     }
-                    else if (received == 0) // 連接已正常關閉
+                    else if (received == 0)
                     {
                         AppendMessage("連接已斷開 (對方關閉)");
-                        break; // 退出接收循環
+                        break;
                     }
                 }
             }
             catch (Exception ex)
             {
-                // 如果連接仍然是活的，可能是其他錯誤
-                if (_connectedClient != null && _connectedClient.Connected)
+                if (_connectedClient?.Connected == true)
                 {
                     AppendMessage("接收錯誤: " + ex.Message);
                 }
-                else // 連接已斷開 (可能由對端關閉或網路問題導致)
+                else
                 {
-                    AppendMessage("連接已斷開或發生錯誤");
+                    AppendMessage("連接已斷開");
                 }
             }
             finally
             {
-                // 接收執行緒結束時，清理相關資源
-                // 如果 _connectedClient 仍然存在且連接著，在這裡關閉它
-                if (_connectedClient != null && _connectedClient.Connected)
+                if (_connectedClient?.Connected == true)
                 {
                     try { _connectedClient.Close(); } catch { }
                 }
                 _connectedClient = null;
-                // AppendMessage("接收執行緒結束。"); // 這條訊息可能不會顯示
             }
         }
+
 
         private void StopListening()
         {
@@ -400,35 +436,43 @@ namespace P2PChat
             }
         }
 
-        private void AppendMessage(string message)
+        private void AppendMessage(string message, bool clear = false)
         {
-            // 在嘗試 Invoke 或更新 UI 之前，檢查 RichTextBox 是否已處置或正在處置，並檢查句柄是否已建立
             if (rtbMessages == null || rtbMessages.IsDisposed || this.IsDisposed || this.Disposing || !rtbMessages.IsHandleCreated) return;
 
             if (rtbMessages.InvokeRequired)
             {
                 try
                 {
-                    // 在 Invoke 的委託中再次檢查，確保在執行時控制項仍然有效且句柄存在
                     rtbMessages.Invoke((MethodInvoker)delegate
                     {
                         if (rtbMessages != null && !rtbMessages.IsDisposed && !this.IsDisposed && !this.Disposing && rtbMessages.IsHandleCreated)
                         {
-                            rtbMessages.AppendText(message + Environment.NewLine);
+                            if (clear)
+                                rtbMessages.Clear();
+                            else
+                                rtbMessages.AppendText(message + Environment.NewLine);
                         }
                     });
                 }
-                catch (ObjectDisposedException) { /* 忽略在控制項處置時發生的異常 */ }
-                catch (InvalidOperationException) { /* 忽略在 Form 關閉時可能發生的異常 */ }
+                catch (ObjectDisposedException) { }
+                catch (InvalidOperationException) { }
             }
             else
             {
-                // 在 UI 執行緒中直接更新，但仍需檢查狀態
                 if (rtbMessages != null && !rtbMessages.IsDisposed && !this.IsDisposed && !this.Disposing && rtbMessages.IsHandleCreated)
                 {
-                    rtbMessages.AppendText(message + Environment.NewLine);
+                    if (clear)
+                        rtbMessages.Clear();
+                    else
+                        rtbMessages.AppendText(message + Environment.NewLine);
                 }
             }
+        }
+
+        private void btnclear_Click(object sender, EventArgs e)
+        {
+            AppendMessage(null, true);
         }
 
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -549,6 +593,26 @@ namespace P2PChat
                     }
                 }
             }
+        }
+
+        // 處理圖片按鈕點擊事件
+        private void btnpicture_Click(object sender, EventArgs e)
+        {
+            formpicture pictureForm = new formpicture(_connectedClient);
+            pictureForm.Show();
+        }
+
+        private void DisableControls()
+        {
+            if (txtMessage != null && btnSend != null)
+            {
+                txtMessage.Enabled = false;
+                btnSend.Enabled = false;
+            }
+            if (btnchat1 != null && !btnchat1.IsDisposed) btnchat1.Enabled = false;
+            if (btnchat2 != null && !btnchat2.IsDisposed) btnchat2.Enabled = false;
+            if (btnchat3 != null && !btnchat3.IsDisposed) btnchat3.Enabled = false;
+            if (btnpicture != null && !btnpicture.IsDisposed) btnpicture.Enabled = false;  // 停用圖片按鈕
         }
     }
 }

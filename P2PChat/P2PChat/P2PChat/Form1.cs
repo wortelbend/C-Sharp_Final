@@ -4,11 +4,13 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Threading;
 
 namespace P2PChat
 {
     public partial class Form1 : Form
     {
+        // 客戶端相關變數
         private System.Windows.Forms.Timer connectionTimer;
         private int remainingSeconds = 30;
         private TcpClient tcpClient;
@@ -18,25 +20,35 @@ namespace P2PChat
         {
             InitializeComponent();
             InitializeTimer();
-            // 確保按鈕事件綁定
-            btnEnableTCP.Click += new EventHandler(btnEnableTCP_Click);
+            btnEnableTCP.Click += btnEnableTCP_Click;
+            this.VisibleChanged += Form1_VisibleChanged;
         }
-
+        // 初始化計時器
         private void InitializeTimer()
         {
-            connectionTimer = new System.Windows.Forms.Timer();
-            connectionTimer.Interval = 1000; // 1秒
+            connectionTimer = new System.Windows.Forms.Timer
+            {
+                Interval = 1000,
+                Enabled = false
+            };
             connectionTimer.Tick += ConnectionTimer_Tick;
         }
-
+        // 表單載入時初始化
         private void Form1_Load(object sender, EventArgs e)
         {
-            // 表單載入時的初始化
             btnEnableTCP.Enabled = true;
             txtClientIP.Text = "";
             txtClientPORT.Text = "";
         }
-
+        // 處理表單可見性改變事件
+        private void Form1_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                btnEnableTCP.Enabled = true;
+            }
+        }
+        // 顯示連接進度視窗
         private void ShowProgressForm()
         {
             progressForm = new Form
@@ -48,26 +60,26 @@ namespace P2PChat
                 Text = "連接中"
             };
 
-            Label lblProgress = new Label
+            progressForm.Controls.Add(new Label
             {
                 Text = $"正在連接伺服器...\n剩餘時間：{remainingSeconds}秒",
                 AutoSize = true,
                 Location = new Point(20, 20)
-            };
+            });
 
-            progressForm.Controls.Add(lblProgress);
             progressForm.Show();
         }
 
+        // 更新進度顯示內容
         private void UpdateProgressForm()
         {
-            if (progressForm != null && !progressForm.IsDisposed)
+            if (progressForm?.IsDisposed == false)
             {
-                Label lblProgress = (Label)progressForm.Controls[0];
-                lblProgress.Text = $"正在連接伺服器...\n剩餘時間：{remainingSeconds}秒";
+                ((Label)progressForm.Controls[0]).Text = $"正在連接伺服器...\n剩餘時間：{remainingSeconds}秒";
             }
         }
 
+        // 處理連接按鈕點擊事件
         private async void btnEnableTCP_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtClientIP.Text) || string.IsNullOrEmpty(txtClientPORT.Text))
@@ -84,12 +96,12 @@ namespace P2PChat
                 btnEnableTCP.Enabled = false;
                 ShowProgressForm();
 
-                // 嘗試連接
+                // 嘗試連接伺服器
                 tcpClient = new TcpClient();
                 var connectTask = tcpClient.ConnectAsync(txtClientIP.Text, int.Parse(txtClientPORT.Text));
 
-                // 等待連接完成或超時
-                using (var cts = new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(30)))
+                // 等待連接完成
+                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30)))
                 {
                     try
                     {
@@ -100,7 +112,6 @@ namespace P2PChat
                             throw new TimeoutException("連接超時");
                         }
 
-                        // 檢查連接是否真的成功
                         if (!tcpClient.Connected)
                         {
                             throw new SocketException((int)SocketError.ConnectionRefused);
@@ -119,32 +130,30 @@ namespace P2PChat
                         throw;
                     }
                 }
-
-                // 如果成功連接
+                // 連接成功處理
                 connectionTimer.Stop();
-                if (progressForm != null && !progressForm.IsDisposed)
-                {
-                    progressForm.Close();
-                }
+                progressForm?.Close();
                 MessageBox.Show("連線已接受", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // 開啟聊天視窗，並將已連接的 tcpClient 傳入
-                ChatForm chatForm = new ChatForm(tcpClient, this);
+                // 開啟聊天視窗
+                var chatForm = new ChatForm(tcpClient, this);
                 chatForm.Show();
                 this.Hide();
             }
             catch (Exception ex)
             {
-                connectionTimer.Stop();
-                btnEnableTCP.Enabled = true;
-                if (progressForm != null && !progressForm.IsDisposed)
-                {
-                    progressForm.Close();
-                }
-                MessageBox.Show($"連接失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                HandleConnectionError(ex);
             }
         }
-
+        // 處理連接錯誤
+        private void HandleConnectionError(Exception ex)
+        {
+            connectionTimer.Stop();
+            btnEnableTCP.Enabled = true;
+            progressForm?.Close();
+            MessageBox.Show($"連接失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        // 處理等待計時器事件
         private void ConnectionTimer_Tick(object sender, EventArgs e)
         {
             remainingSeconds--;
@@ -154,25 +163,18 @@ namespace P2PChat
             {
                 connectionTimer.Stop();
                 btnEnableTCP.Enabled = true;
+                tcpClient?.Close();
+                tcpClient = null;
 
-                if (tcpClient != null)
+                if (progressForm?.IsDisposed == false)
                 {
-                    tcpClient.Close();
-                    tcpClient = null;
-                }
-
-                if (progressForm != null && !progressForm.IsDisposed)
-                {
-                    Label lblProgress = (Label)progressForm.Controls[0];
+                    var lblProgress = (Label)progressForm.Controls[0];
                     lblProgress.Text = "伺服器無回應";
                     lblProgress.ForeColor = Color.Red;
                 }
             }
         }
-
-        private void btnDisableTCP_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        // 關閉客戶端視窗
+        private void btnDisableTCP_Click(object sender, EventArgs e) => Close();
     }
 }
