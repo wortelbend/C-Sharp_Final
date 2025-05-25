@@ -44,20 +44,20 @@ namespace P2PServer
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.pictureBox1.Location = new System.Drawing.Point(10, 2);
+            this.pictureBox1.Location = new System.Drawing.Point(1, 11);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(665, 279);
+            this.pictureBox1.Size = new System.Drawing.Size(982, 510);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
             // btnPCpicture
             // 
             this.btnPCpicture.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnPCpicture.Location = new System.Drawing.Point(10, 296);
+            this.btnPCpicture.Location = new System.Drawing.Point(12, 534);
             this.btnPCpicture.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPCpicture.Name = "btnPCpicture";
-            this.btnPCpicture.Size = new System.Drawing.Size(158, 44);
+            this.btnPCpicture.Size = new System.Drawing.Size(169, 55);
             this.btnPCpicture.TabIndex = 1;
             this.btnPCpicture.Text = "選擇本機圖片";
             this.btnPCpicture.UseVisualStyleBackColor = true;
@@ -65,10 +65,10 @@ namespace P2PServer
             // btnlinkpicture
             // 
             this.btnlinkpicture.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnlinkpicture.Location = new System.Drawing.Point(174, 296);
+            this.btnlinkpicture.Location = new System.Drawing.Point(187, 534);
             this.btnlinkpicture.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnlinkpicture.Name = "btnlinkpicture";
-            this.btnlinkpicture.Size = new System.Drawing.Size(159, 44);
+            this.btnlinkpicture.Size = new System.Drawing.Size(169, 55);
             this.btnlinkpicture.TabIndex = 1;
             this.btnlinkpicture.Text = "上傳圖片連結";
             this.btnlinkpicture.UseVisualStyleBackColor = true;
@@ -76,10 +76,10 @@ namespace P2PServer
             // btnsend
             // 
             this.btnsend.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnsend.Location = new System.Drawing.Point(453, 296);
+            this.btnsend.Location = new System.Drawing.Point(639, 534);
             this.btnsend.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnsend.Name = "btnsend";
-            this.btnsend.Size = new System.Drawing.Size(116, 44);
+            this.btnsend.Size = new System.Drawing.Size(169, 55);
             this.btnsend.TabIndex = 1;
             this.btnsend.Text = "傳送";
             this.btnsend.UseVisualStyleBackColor = true;
@@ -87,10 +87,10 @@ namespace P2PServer
             // btncancel
             // 
             this.btncancel.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btncancel.Location = new System.Drawing.Point(575, 296);
+            this.btncancel.Location = new System.Drawing.Point(814, 534);
             this.btncancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btncancel.Name = "btncancel";
-            this.btncancel.Size = new System.Drawing.Size(100, 44);
+            this.btncancel.Size = new System.Drawing.Size(169, 55);
             this.btncancel.TabIndex = 1;
             this.btncancel.Text = "取消";
             this.btncancel.UseVisualStyleBackColor = true;
@@ -99,7 +99,7 @@ namespace P2PServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 360);
+            this.ClientSize = new System.Drawing.Size(984, 611);
             this.Controls.Add(this.btncancel);
             this.Controls.Add(this.btnsend);
             this.Controls.Add(this.btnlinkpicture);

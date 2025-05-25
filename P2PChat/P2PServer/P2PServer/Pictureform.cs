@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Text;
 
 namespace P2PServer
 {
@@ -45,7 +40,6 @@ namespace P2PServer
                 {
                     try
                     {
-                        // 檢查檔案大小（限制為 5MB）
                         FileInfo fileInfo = new FileInfo(openFileDialog.FileName);
                         if (fileInfo.Length > 5 * 1024 * 1024)
                         {
@@ -53,7 +47,6 @@ namespace P2PServer
                             return;
                         }
 
-                        // 讀取並顯示圖片
                         selectedImage = Image.FromFile(openFileDialog.FileName);
                         pictureBox1.Image = selectedImage;
                         pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -104,7 +97,6 @@ namespace P2PServer
                 {
                     try
                     {
-                        // 下載並顯示圖片
                         using (WebClient client = new WebClient())
                         {
                             byte[] imageBytes = client.DownloadData(textBox.Text);
@@ -134,14 +126,11 @@ namespace P2PServer
 
             try
             {
-                // 將圖片轉換為 Base64 字串
                 using (MemoryStream ms = new MemoryStream())
                 {
                     selectedImage.Save(ms, selectedImage.RawFormat);
                     byte[] imageBytes = ms.ToArray();
                     string base64Image = Convert.ToBase64String(imageBytes);
-
-                    // 發送圖片
                     string imageMessage = $"<IMAGE>{base64Image}</IMAGE>";
                     byte[] data = Encoding.Unicode.GetBytes(imageMessage);
 

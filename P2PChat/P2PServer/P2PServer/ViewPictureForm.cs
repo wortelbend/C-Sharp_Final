@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 
 namespace P2PServer
 {
+    // 圖片預覽視窗，提供圖片顯示和儲存功能
     public partial class ViewPictureForm : Form
     {
         public ViewPictureForm()
@@ -25,6 +20,7 @@ namespace P2PServer
             btnback.Click += btnback_Click;
         }
 
+        // 設定要顯示的圖片，並自動調整顯示模式
         public void SetImage(Image image)
         {
             if (pictureBox1.Image != null)
@@ -35,6 +31,7 @@ namespace P2PServer
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
+        // 儲存圖片功能，支援多種圖片格式
         private void btnsave_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)

@@ -2,16 +2,16 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Threading;
-using P2PChat; // 加入這個 using 指令，以便引用 P2PChat 命名空間下的 ChatForm
+using System.Threading.Tasks;
+using P2PChat;
 
 namespace P2PServer
 {
+    // 伺服器主表單，處理TCP連接和客戶端監聽
     public partial class Form1 : Form
     {
-        // 伺服器相關變數
+        // TCP伺服器相關變數
         private TcpListener tcpListener;
         private System.Windows.Forms.Timer connectionTimer;
         private int remainingSeconds = 30;
@@ -25,7 +25,7 @@ namespace P2PServer
             btnEnableServerTCP.Click += btnEnableServerTCP_Click;
         }
 
-        // 初始化計時器設定
+        // 初始化等待連接計時器
         private void InitializeTimer()
         {
             connectionTimer = new System.Windows.Forms.Timer
@@ -36,13 +36,13 @@ namespace P2PServer
             connectionTimer.Tick += ConnectionTimer_Tick;
         }
 
-        // 表單載入時的初始化設定
+        // 初始化伺服器設定
         private void Form1_Load(object sender, EventArgs e)
         {
             btnEnableServerTCP.Enabled = true;
             btnEnableServerTCP.Text = "開始監聽";
-            txtServerIP.Text = "127.0.0.1"; // 預設本地IP
-            txtServerPORT.Text = "8888"; // 預設Port
+            txtServerIP.Text = "127.0.0.1";
+            txtServerPORT.Text = "8888";
         }
 
         // 顯示等待連接的進度視窗
@@ -67,7 +67,7 @@ namespace P2PServer
             progressForm.Show();
         }
 
-        // 更新進度視窗的顯示內容
+        // 更新等待連接進度視窗
         private void UpdateProgressForm()
         {
             if (progressForm?.IsDisposed == false)
@@ -76,7 +76,7 @@ namespace P2PServer
             }
         }
 
-        // 處理伺服器啟動/停止按鈕點擊事件
+        // 處理伺服器啟動/停止
         private async void btnEnableServerTCP_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtServerIP.Text) || string.IsNullOrEmpty(txtServerPORT.Text))
@@ -89,14 +89,12 @@ namespace P2PServer
             {
                 if (!isServerRunning)
                 {
-                    // 啟動伺服器監聽
                     int port = int.Parse(txtServerPORT.Text);
-                    tcpListener = new TcpListener(IPAddress.Any, port); // 使用Any來監聽所有網路介面
+                    tcpListener = new TcpListener(IPAddress.Any, port);
                     tcpListener.Start();
                     isServerRunning = true;
                     btnEnableServerTCP.Text = "停止監聽";
 
-                    // 啟動等待計時
                     remainingSeconds = 30;
                     connectionTimer.Start();
                     ShowProgressForm();
@@ -105,7 +103,6 @@ namespace P2PServer
                 }
                 else
                 {
-                    // 停止伺服器監聽
                     StopServer();
                 }
             }
@@ -116,7 +113,7 @@ namespace P2PServer
             }
         }
 
-        // 停止伺服器並重置狀態
+        // 停止伺服器並重置所有狀態
         private void StopServer()
         {
             tcpListener?.Stop();
@@ -136,19 +133,13 @@ namespace P2PServer
                 {
                     TcpClient client = await tcpListener.AcceptTcpClientAsync();
 
-                    // 客戶端連接成功處理
                     connectionTimer.Stop();
                     progressForm?.Close();
                     MessageBox.Show("客戶端已連接", "連接成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // 開啟聊天視窗
                     var serverChatForm = new ChatForm(client, this);
                     serverChatForm.Show();
-                    this.Hide(); // 隱藏伺服器監聽視窗
-
-                    // TODO: 在此處處理客戶端與伺服器之間的通訊
-                    // 目前只是接受連線，實際的聊天邏輯還需要在此處或新的方法中實現
-                    // break; // 如果需要支援多個客戶端需要修改此處，這裡為了簡單演示單客戶端連線，先保留 break
+                    this.Hide();
                 }
             }
             catch (Exception ex)
@@ -183,7 +174,6 @@ namespace P2PServer
             }
         }
 
-        // 關閉伺服器視窗
         private void btndisbleServerTCP_Click(object sender, EventArgs e) => Close();
 
         // 重置伺服器狀態
