@@ -66,6 +66,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewPictureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewPictureForm.Designer.cs">
+      <DependentUpon>ViewPictureForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Pictureform.resx">
       <DependentUpon>Pictureform.cs</DependentUpon>
     </EmbeddedResource>
@@ -84,6 +90,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ViewPictureForm.resx">
+      <DependentUpon>ViewPictureForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
