@@ -89,6 +89,7 @@ namespace P2PChat
             btndisconnect.Click += btndisconnect_Click;
             btnpicture.Click += btnpicture_Click;
             btnreadpic.Click += btnreadpic_Click;
+            btnemoji.Click += btnemoji_Click;
 
             if (btnchat1 != null) btnchat1.Click += btnchat_Click;
             if (btnchat2 != null) btnchat2.Click += btnchat_Click;
@@ -546,6 +547,71 @@ namespace P2PChat
             else
             {
                 MessageBox.Show("目前沒有圖片可以查看", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // 表情符號選單
+        private void btnemoji_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Form emojiForm = new Form
+                {
+                    FormBorderStyle = FormBorderStyle.None,
+                    StartPosition = FormStartPosition.Manual,
+                    ShowInTaskbar = false,
+                    TopMost = true
+                };
+
+                FlowLayoutPanel flowPanel = new FlowLayoutPanel
+                {
+                    AutoScroll = true,
+                    FlowDirection = FlowDirection.LeftToRight,
+                    WrapContents = true,
+                    Size = new Size(300, 200),
+                    Padding = new Padding(5),
+                    BackColor = Color.White
+                };
+
+                string[] emojis = new string[]
+                {
+                    "😊", "😂", "❤️", "👍", "🎉","😍", "😭", "🙏", "😎", "🤔","😡", "😴", "🤗", "😱", "😇","😘", "🥰",
+                };
+
+                foreach (string emoji in emojis)
+                {
+                    Button emojiButton = new Button
+                    {
+                        Text = emoji,
+                        Font = new Font("Segoe UI Emoji", 16F),
+                        Size = new Size(50, 50),
+                        FlatStyle = FlatStyle.Flat,
+                        Margin = new Padding(2)
+                    };
+
+                    emojiButton.FlatAppearance.BorderSize = 0;
+                    emojiButton.Click += (s, args) =>
+                    {
+                        if (txtMessage != null && !txtMessage.IsDisposed)
+                        {
+                            txtMessage.SelectedText = emoji;
+                            txtMessage.Focus();
+                        }
+                        emojiForm.Close();
+                    };
+
+                    flowPanel.Controls.Add(emojiButton);
+                }
+
+                emojiForm.Controls.Add(flowPanel);
+                emojiForm.Size = flowPanel.Size;
+                emojiForm.Location = btnemoji.PointToScreen(new Point(0, btnemoji.Height));
+                emojiForm.Deactivate += (s, args) => emojiForm.Close();
+                emojiForm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"開啟表情符號選單時發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
