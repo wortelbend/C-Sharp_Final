@@ -12,6 +12,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Collections;
 using System.IO;
+using P2PChat;
 
 namespace P2PChat
 {
@@ -44,6 +45,7 @@ namespace P2PChat
             InitializeComponent();
             InitializeNetwork();
             SetupEventHandlers();
+            this.FormClosing += ChatForm_FormClosing;
         }
 
         // 新增一個建構子，接收一個已連接的 TcpClient 物件
@@ -51,6 +53,7 @@ namespace P2PChat
         {
             InitializeComponent();
             _connectedClient = connectedClient;
+            this.FormClosing += ChatForm_FormClosing;
 
             // 啟動接收訊息的執行緒
             thrReceiver = new Thread(new ThreadStart(ReceiverThread));
@@ -68,6 +71,7 @@ namespace P2PChat
             InitializeComponent();
             _connectedClient = connectedClient;
             _parentForm = parentForm; // 儲存父視窗參考
+            this.FormClosing += ChatForm_FormClosing;
 
             // 啟動接收訊息的執行緒
             thrReceiver = new Thread(new ThreadStart(ReceiverThread));
@@ -91,9 +95,11 @@ namespace P2PChat
         {
             btnSend.Click += btnSend_Click;
             txtMessage.KeyDown += txtMessage_KeyDown;
+            txtMessage.TextChanged += txtMessage_TextChanged;  // 添加 TextChanged 事件
             btnclear.Click += btnclear_Click;
             btndisconnect.Click += btndisconnect_Click;
             btnpicture.Click += btnpicture_Click;  // 添加圖片按鈕事件
+            btnreadpic.Click += btnreadpic_Click;  // 添加查看圖片按鈕事件
 
             if (btnchat1 != null) btnchat1.Click += btnchat_Click;
             if (btnchat2 != null) btnchat2.Click += btnchat_Click;
@@ -113,6 +119,15 @@ namespace P2PChat
                 SendMessage(); // 調用新的發送訊息方法
                 e.Handled = true; // 阻止發出 Enter 鍵的預設音效
                 e.SuppressKeyPress = true; // 阻止將 Enter 鍵傳遞給基礎控制項
+            }
+        }
+
+        // 添加 TextChanged 事件處理方法
+        private void txtMessage_TextChanged(object sender, EventArgs e)
+        {
+            if (lblword != null && !lblword.IsDisposed)
+            {
+                lblword.Text = $"可傳送字數：{txtMessage.Text.Length}/500";
             }
         }
 
@@ -165,6 +180,13 @@ namespace P2PChat
         {
             string message = messageToSend ?? txtMessage.Text; // 如果傳入了 messageToSend，則使用它，否則使用 txtMessage.Text
             if (string.IsNullOrEmpty(message)) return;
+
+            // 檢查訊息長度是否超過 500 字
+            if (message.Length > 500)
+            {
+                AppendMessage("系統提示：訊息長度超過上限（500字），無法傳送");
+                return;
+            }
 
             try
             {
@@ -477,65 +499,60 @@ namespace P2PChat
 
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // StopListening(); // 移除或不執行內部的停止監聽邏輯
-            // DisconnectClient(); // 移除或不執行內部的斷開邏輯
+            // 取消預設的關閉行為
+            e.Cancel = true;
 
-            // 向對方發送斷開連接訊息 (只有在連接仍然有效時)
-            // 注意：如果在 ReceiverThread 中因為收到 DISCONNECT 而觸發的 Close，這裡可能無需再次發送
-            // 為了安全起見，可以在關閉前嘗試發送，但要處理可能發生的異常
-            if (_connectedClient != null && _connectedClient.Connected)
+            // 顯示確認對話框
+            DialogResult result = MessageBox.Show("確定要斷開連接嗎？", "確認斷開", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
             {
-                try
+                // 只有在連接仍然有效時才嘗試發送斷開訊息
+                if (_connectedClient != null && _connectedClient.Connected)
                 {
-                    // 使用 SendMessage 方法發送，它已經包含連接檢查和異常處理
-                    SendMessage("<DISCONNECT>");
-                    // 延遲一小段時間確保訊息發送
-                    Thread.Sleep(100);
+                    try
+                    {
+                        SendMessage("<DISCONNECT>"); // 使用一個特殊標記
+                        // 延遲一小段時間，確保訊息發送
+                        Thread.Sleep(100);
+                    }
+                    catch { /* 發送失敗也沒關係 */ }
                 }
-                catch { /* 發送失敗也沒關係 */ }
-            }
 
-            // 安全關閉連接
-            if (_connectedClient != null)
-            {
-                try
+                // 關閉連接
+                if (_connectedClient != null)
                 {
-                    _connectedClient.Close();
+                    try { _connectedClient.Close(); } catch { }
+                    _connectedClient = null;
                 }
-                catch { }
-                _connectedClient = null;
-            }
 
-            // 等待接收執行緒結束
-            // 設定 thrReceiver 為背景執行緒後，應用程式關閉時會自動終止，但最好能等待它乾淨退出
-            if (thrReceiver != null && thrReceiver.IsAlive)
-            {
-                // 嘗試等待執行緒自然結束一段時間
-                if (!thrReceiver.Join(500)) // 等待最多 500 毫秒
+                // 停止接收執行緒
+                if (thrReceiver != null && thrReceiver.IsAlive)
                 {
-                    // 如果執行緒仍未結束，考慮更溫和的中止方式或依賴背景執行緒自動終止
-                    // 這裡不使用 Abort，依賴背景執行緒屬性或讓它自然退出
-                    // AppendMessage("接收執行緒未能及時結束。"); // 在 FormClosing 中不應更新 UI
+                    try { thrReceiver.Join(100); } catch { }
                 }
-            }
-            // thrReceiver = null; // 清理引用
 
-            // 如果 ChatForm 關閉，且父視窗存在但未顯示，則顯示父視窗
-            // 這段邏輯放在這裡確保 ChatForm 關閉後才顯示父視窗
-            if (_parentForm != null && !_parentForm.Visible)
-            {
-                // 在 UI 執行緒上顯示父視窗，以防當前在其他執行緒中觸發關閉
-                if (_parentForm.InvokeRequired)
+                // 顯示父視窗 (Form1)
+                if (_parentForm != null && !_parentForm.IsDisposed)
                 {
-                    _parentForm.Invoke((MethodInvoker)delegate
+                    if (_parentForm.InvokeRequired)
+                    {
+                        _parentForm.Invoke((MethodInvoker)delegate
+                        {
+                            if (!_parentForm.IsDisposed && !_parentForm.Disposing) _parentForm.Show();
+                        });
+                    }
+                    else
                     {
                         if (!_parentForm.IsDisposed && !_parentForm.Disposing) _parentForm.Show();
-                    });
+                    }
                 }
-                else
-                {
-                    if (!_parentForm.IsDisposed && !_parentForm.Disposing) _parentForm.Show();
-                }
+
+                // 移除 FormClosing 事件處理程序，避免重複觸發
+                this.FormClosing -= ChatForm_FormClosing;
+
+                // 關閉當前視窗
+                this.Close();
             }
         }
 
@@ -600,6 +617,21 @@ namespace P2PChat
         {
             formpicture pictureForm = new formpicture(_connectedClient);
             pictureForm.Show();
+        }
+
+        // 添加查看圖片按鈕點擊事件處理方法
+        private void btnreadpic_Click(object sender, EventArgs e)
+        {
+            if (pictureBox1.Image != null)
+            {
+                P2PChat.ViewPictureForm viewForm = new P2PChat.ViewPictureForm();
+                viewForm.SetImage(pictureBox1.Image);  // 使用公共方法設置圖片
+                viewForm.Show();
+            }
+            else
+            {
+                MessageBox.Show("目前沒有圖片可以查看", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void DisableControls()
