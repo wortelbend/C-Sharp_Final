@@ -34,6 +34,7 @@ namespace P2PChat
             btnpicture = new Button();
             lblword = new Label();
             btnreadpic = new Button();
+            btnemoji = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -184,9 +185,9 @@ namespace P2PChat
             // btnpicture
             // 
             btnpicture.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnpicture.Location = new Point(818, 533);
+            btnpicture.Location = new Point(792, 295);
             btnpicture.Name = "btnpicture";
-            btnpicture.Size = new Size(108, 46);
+            btnpicture.Size = new Size(124, 38);
             btnpicture.TabIndex = 14;
             btnpicture.Text = "傳送圖片";
             btnpicture.UseVisualStyleBackColor = true;
@@ -211,6 +212,18 @@ namespace P2PChat
             btnreadpic.Text = "查看圖片";
             btnreadpic.UseVisualStyleBackColor = true;
             // 
+            // btnemoji
+            // 
+            btnemoji.BackColor = SystemColors.Window;
+            btnemoji.Font = new Font("Microsoft JhengHei UI", 16F);
+            btnemoji.Location = new Point(808, 533);
+            btnemoji.Margin = new Padding(4);
+            btnemoji.Name = "btnemoji";
+            btnemoji.Size = new Size(108, 46);
+            btnemoji.TabIndex = 4;
+            btnemoji.Text = "表情選單";
+            btnemoji.UseVisualStyleBackColor = false;
+            // 
             // ChatForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -233,10 +246,11 @@ namespace P2PChat
             Controls.Add(rtbMessages);
             Controls.Add(txtMessage);
             Controls.Add(btnclear);
+            Controls.Add(btnemoji);
             Controls.Add(btnSend);
             Margin = new Padding(4);
             Name = "ChatForm";
-            Text = "P2P 聊天(客戶端)";
+            Text = "P2P聊天室(客戶端)";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -259,5 +273,6 @@ namespace P2PChat
         private Button btnpicture;
         private Label lblword;
         private Button btnreadpic;
+        private Button btnemoji;
     }
 }
