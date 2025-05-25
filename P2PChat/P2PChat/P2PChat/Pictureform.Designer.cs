@@ -38,16 +38,17 @@
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(12, 2);
+            pictureBox1.BackColor = SystemColors.ControlDark;
+            pictureBox1.Location = new Point(1, 11);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(776, 349);
+            pictureBox1.Size = new Size(982, 510);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
             // btnPCpicture
             // 
             btnPCpicture.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnPCpicture.Location = new Point(12, 370);
+            btnPCpicture.Location = new Point(12, 534);
             btnPCpicture.Name = "btnPCpicture";
             btnPCpicture.Size = new Size(169, 55);
             btnPCpicture.TabIndex = 1;
@@ -57,7 +58,7 @@
             // btnlinkpicture
             // 
             btnlinkpicture.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnlinkpicture.Location = new Point(187, 370);
+            btnlinkpicture.Location = new Point(187, 534);
             btnlinkpicture.Name = "btnlinkpicture";
             btnlinkpicture.Size = new Size(169, 55);
             btnlinkpicture.TabIndex = 1;
@@ -67,9 +68,9 @@
             // btnsend
             // 
             btnsend.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnsend.Location = new Point(471, 370);
+            btnsend.Location = new Point(625, 534);
             btnsend.Name = "btnsend";
-            btnsend.Size = new Size(135, 55);
+            btnsend.Size = new Size(169, 55);
             btnsend.TabIndex = 1;
             btnsend.Text = "傳送";
             btnsend.UseVisualStyleBackColor = true;
@@ -77,9 +78,9 @@
             // btncancel
             // 
             btncancel.Font = new Font("Microsoft JhengHei UI", 16F);
-            btncancel.Location = new Point(671, 370);
+            btncancel.Location = new Point(814, 534);
             btncancel.Name = "btncancel";
-            btncancel.Size = new Size(117, 55);
+            btncancel.Size = new Size(169, 55);
             btncancel.TabIndex = 1;
             btncancel.Text = "取消";
             btncancel.UseVisualStyleBackColor = true;
@@ -88,7 +89,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(984, 611);
             Controls.Add(btncancel);
             Controls.Add(btnsend);
             Controls.Add(btnlinkpicture);
