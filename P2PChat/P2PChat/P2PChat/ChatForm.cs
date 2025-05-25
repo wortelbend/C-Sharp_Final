@@ -548,9 +548,6 @@ namespace P2PChat
                     }
                 }
 
-                // 移除 FormClosing 事件處理程序，避免重複觸發
-                this.FormClosing -= ChatForm_FormClosing;
-
                 // 關閉當前視窗
                 this.Close();
             }
@@ -563,6 +560,8 @@ namespace P2PChat
 
             if (result == DialogResult.Yes)
             {
+                // 移除 FormClosing 事件處理程序，避免重複觸發
+                this.FormClosing -= ChatForm_FormClosing;
                 // 只有在連接仍然有效時才嘗試發送斷開訊息
                 if (_connectedClient != null && _connectedClient.Connected)
                 {
