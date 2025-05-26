@@ -52,6 +52,7 @@ namespace P2PChat
             // txtMessage
             // 
             this.txtMessage.BackColor = System.Drawing.SystemColors.Window;
+            this.txtMessage.Font = new System.Drawing.Font("新細明體", 14F);
             this.txtMessage.Location = new System.Drawing.Point(12, 532);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";

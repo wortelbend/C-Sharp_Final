@@ -81,7 +81,7 @@ namespace P2PServer
             this.Controls.Add(this.pictureBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "ViewPictureForm";
-            this.Text = "ViewPictureForm";
+            this.Text = "查看圖片";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
