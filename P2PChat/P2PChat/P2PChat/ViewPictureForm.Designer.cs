@@ -72,7 +72,7 @@
             Controls.Add(btnsave);
             Controls.Add(pictureBox1);
             Name = "ViewPictureForm";
-            Text = "ViewPictureForm";
+            Text = "查看圖片";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }

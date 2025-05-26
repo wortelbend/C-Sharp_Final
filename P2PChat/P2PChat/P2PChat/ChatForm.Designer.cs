@@ -53,6 +53,7 @@ namespace P2PChat
             // txtMessage
             // 
             txtMessage.BackColor = SystemColors.Window;
+            txtMessage.Font = new Font("新細明體", 14F);
             txtMessage.Location = new Point(12, 532);
             txtMessage.Margin = new Padding(4);
             txtMessage.Multiline = true;
@@ -254,7 +255,6 @@ namespace P2PChat
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         private System.Windows.Forms.RichTextBox rtbMessages;
