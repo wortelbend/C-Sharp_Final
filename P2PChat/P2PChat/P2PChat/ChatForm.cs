@@ -452,6 +452,8 @@ namespace P2PChat
         {
             if (rtbMessages == null || rtbMessages.IsDisposed || this.IsDisposed || this.Disposing || !rtbMessages.IsHandleCreated) return;
 
+            // 將 isAtBottom 的判斷移到 Invoke 內部
+            // 這樣可以確保所有對 rtbMessages 的存取都在 UI 執行緒上進行
             if (rtbMessages.InvokeRequired)
             {
                 try
@@ -460,24 +462,44 @@ namespace P2PChat
                     {
                         if (rtbMessages != null && !rtbMessages.IsDisposed && !this.IsDisposed && !this.Disposing && rtbMessages.IsHandleCreated)
                         {
+                            // 在 UI 執行緒中判斷是否在底部
+                            bool isAtBottom = rtbMessages.TextLength == rtbMessages.SelectionStart;
+
                             if (clear)
                                 rtbMessages.Clear();
                             else
                                 rtbMessages.AppendText(message + Environment.NewLine);
+
+                            // 只有當原本就在底部，或是清空後添加新訊息時，才自動滾動
+                            if (isAtBottom || clear)
+                            {
+                                rtbMessages.SelectionStart = rtbMessages.Text.Length;
+                                rtbMessages.ScrollToCaret();
+                            }
                         }
                     });
                 }
-                catch (ObjectDisposedException) { }
-                catch (InvalidOperationException) { }
+                catch (ObjectDisposedException) { /* 忽略已處置物件的例外 */ }
+                catch (InvalidOperationException) { /* 忽略無效操作的例外 */ }
             }
             else
             {
+                // 在 UI 執行緒中判斷是否在底部
+                bool isAtBottom = rtbMessages.TextLength == rtbMessages.SelectionStart;
+
                 if (rtbMessages != null && !rtbMessages.IsDisposed && !this.IsDisposed && !this.Disposing && rtbMessages.IsHandleCreated)
                 {
                     if (clear)
                         rtbMessages.Clear();
                     else
                         rtbMessages.AppendText(message + Environment.NewLine);
+
+                    // 只有當原本就在底部，或是清空後添加新訊息時，才自動滾動
+                    if (isAtBottom || clear)
+                    {
+                        rtbMessages.SelectionStart = rtbMessages.Text.Length;
+                        rtbMessages.ScrollToCaret();
+                    }
                 }
             }
         }
