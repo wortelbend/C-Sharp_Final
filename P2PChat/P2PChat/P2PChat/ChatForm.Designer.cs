@@ -40,7 +40,7 @@ namespace P2PChat
             // 
             // rtbMessages
             // 
-            rtbMessages.BackColor = SystemColors.GradientInactiveCaption;
+            rtbMessages.BackColor = SystemColors.GradientActiveCaption;
             rtbMessages.Font = new Font("新細明體", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             rtbMessages.Location = new Point(0, 2);
             rtbMessages.Margin = new Padding(4);
@@ -82,7 +82,7 @@ namespace P2PChat
             txtchat1.Name = "txtchat1";
             txtchat1.Size = new Size(155, 33);
             txtchat1.TabIndex = 5;
-            txtchat1.Text = "您好!🖖";
+            txtchat1.Text = "您好!";
             // 
             // btnchat1
             // 
@@ -115,7 +115,7 @@ namespace P2PChat
             txtchat2.Name = "txtchat2";
             txtchat2.Size = new Size(155, 33);
             txtchat2.TabIndex = 7;
-            txtchat2.Text = "再見👋";
+            txtchat2.Text = "再見";
             // 
             // btnchat3
             // 
@@ -137,7 +137,7 @@ namespace P2PChat
             txtchat3.Name = "txtchat3";
             txtchat3.Size = new Size(155, 33);
             txtchat3.TabIndex = 9;
-            txtchat3.Text = "沒問題👍";
+            txtchat3.Text = "沒問題";
             // 
             // btndisconnect
             // 

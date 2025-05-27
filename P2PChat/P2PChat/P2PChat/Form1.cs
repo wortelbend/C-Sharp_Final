@@ -145,7 +145,7 @@ namespace P2PChat
                     btnEnableTCP.Enabled = true;
                     progressForm?.Close();
                     // 顯示連線被拒絕訊息
-                    MessageBox.Show("連線被伺服器拒絕", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("找無伺服器", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (ex is TimeoutException)
                 {

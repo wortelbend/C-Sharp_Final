@@ -46,7 +46,7 @@
             // btnsave
             // 
             btnsave.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnsave.Location = new Point(109, 546);
+            btnsave.Location = new Point(556, 556);
             btnsave.Name = "btnsave";
             btnsave.Size = new Size(193, 43);
             btnsave.TabIndex = 1;
@@ -56,7 +56,7 @@
             // btnback
             // 
             btnback.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnback.Location = new Point(668, 546);
+            btnback.Location = new Point(779, 556);
             btnback.Name = "btnback";
             btnback.Size = new Size(193, 43);
             btnback.TabIndex = 1;

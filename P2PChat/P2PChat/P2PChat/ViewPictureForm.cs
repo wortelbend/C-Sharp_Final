@@ -7,10 +7,14 @@ namespace P2PChat
 {
     public partial class ViewPictureForm : Form
     {
+        private Image _originalImage;     // 儲存原始圖片
+
         public ViewPictureForm()
         {
             InitializeComponent();
             SetupEventHandlers();
+            // 移除或註釋掉滑鼠滾輪事件處理器，如果你只想使用按鈕
+            // pictureBox1.MouseWheel += pictureBox1_MouseWheel; // 如果你仍然想保留滾輪功能，可以保留這一行
         }
 
         private void SetupEventHandlers()
@@ -18,6 +22,7 @@ namespace P2PChat
             btnsave.Click += btnsave_Click;
             btnback.Click += btnback_Click;
         }
+
         // 顯示圖片，並自動調整顯示模式
         public void SetImage(Image image)
         {
@@ -25,7 +30,8 @@ namespace P2PChat
             {
                 pictureBox1.Image.Dispose();
             }
-            pictureBox1.Image = image;
+            _originalImage = image; // 將原始圖片儲存起來
+            pictureBox1.Image = _originalImage; // 初始顯示原始圖片
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
@@ -34,24 +40,20 @@ namespace P2PChat
         {
             if (pictureBox1.Image != null)
             {
-                // 建立儲存檔案對話框
                 SaveFileDialog saveDialog = new SaveFileDialog();
                 saveDialog.Filter = "JPEG 圖片|*.jpg|PNG 圖片|*.png|所有檔案|*.*";
                 saveDialog.Title = "儲存圖片";
                 saveDialog.FileName = "圖片_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
-                // 儲存對話框並處理使用者選擇
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        // 儲存圖片到本機選擇的位置
                         pictureBox1.Image.Save(saveDialog.FileName);
                         MessageBox.Show("圖片已成功儲存", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        // 處理儲存過程中可能發生的錯誤
                         MessageBox.Show("儲存圖片時發生錯誤：" + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -59,7 +61,9 @@ namespace P2PChat
         }
         private void btnback_Click(object sender, EventArgs e)
         {
-            this.Close(); 
+            this.Close();
         }
+
+
     }
 }
