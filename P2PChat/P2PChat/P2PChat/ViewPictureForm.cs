@@ -5,7 +5,6 @@ using System.IO;
 
 namespace P2PChat
 {
-    // 圖片預覽視窗，用於顯示和儲存圖片
     public partial class ViewPictureForm : Form
     {
         public ViewPictureForm()
@@ -13,13 +12,13 @@ namespace P2PChat
             InitializeComponent();
             SetupEventHandlers();
         }
-        // 設定按鈕的點擊事件處理器
+
         private void SetupEventHandlers()
         {
             btnsave.Click += btnsave_Click;
             btnback.Click += btnback_Click;
         }
-        // 設定要顯示的圖片，並自動調整顯示模式
+        // 顯示圖片，並自動調整顯示模式
         public void SetImage(Image image)
         {
             if (pictureBox1.Image != null)
@@ -30,7 +29,7 @@ namespace P2PChat
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
-        // 處理儲存圖片按鈕的點擊事件
+        // 儲存圖片按鈕的點擊事件
         private void btnsave_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)
@@ -41,12 +40,12 @@ namespace P2PChat
                 saveDialog.Title = "儲存圖片";
                 saveDialog.FileName = "圖片_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
 
-                // 顯示儲存對話框並處理使用者選擇
+                // 儲存對話框並處理使用者選擇
                 if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        // 儲存圖片到選擇的位置
+                        // 儲存圖片到本機選擇的位置
                         pictureBox1.Image.Save(saveDialog.FileName);
                         MessageBox.Show("圖片已成功儲存", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -58,10 +57,9 @@ namespace P2PChat
                 }
             }
         }
-        // 關閉圖片預覽視窗
         private void btnback_Click(object sender, EventArgs e)
         {
-            this.Close();  // 關閉圖片預覽視窗
+            this.Close(); 
         }
     }
 }

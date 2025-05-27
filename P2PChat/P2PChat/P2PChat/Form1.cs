@@ -25,7 +25,7 @@ namespace P2PChat
             this.VisibleChanged += Form1_VisibleChanged;
         }
 
-        // 初始化計時器，設定每秒觸發一次
+        // 初始化計時器，每秒觸發一次。
         private void InitializeTimer()
         {
             connectionTimer = new System.Windows.Forms.Timer { Interval = 1000, Enabled = false };
@@ -44,7 +44,7 @@ namespace P2PChat
             if (this.Visible) btnEnableTCP.Enabled = true;
         }
 
-        // 顯示連接進度視窗，包含倒數計時
+        // 顯示一個連接進度視窗，包含一個倒數計時器。
         private void ShowProgressForm()
         {
             progressForm = new Form
@@ -63,10 +63,24 @@ namespace P2PChat
                 Location = new Point(20, 20)
             });
 
+            // FormClosed 事件處理器：當進度視窗關閉時觸發
+            progressForm.FormClosed += ProgressForm_FormClosed;
+
             progressForm.Show();
         }
 
-        // 更新進度視窗的倒數計時
+        // 處理進度視窗關閉的事件。當進度視窗關閉時，會重新啟用連接按鈕並清除 progressForm 的引用。
+        private void ProgressForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // 當進度視窗關閉時，重新啟用按鈕，並清理 progressForm 引用
+            if (btnEnableTCP != null && !btnEnableTCP.IsDisposed) // 確保按鈕物件存在且未被 disposed
+            {
+                btnEnableTCP.Enabled = true;
+            }
+            progressForm = null;
+        }
+
+        // 更新視窗中顯示的倒數計時。
         private void UpdateProgressForm()
         {
             if (progressForm?.IsDisposed == false)
@@ -75,7 +89,7 @@ namespace P2PChat
             }
         }
 
-        // 處理連接按鈕點擊事件，建立 TCP 連接
+        // 嘗試建立一個 TCP 連接，並在連接過程中顯示進度視窗和倒數計時。如果連接成功，它會開啟聊天視窗；如果失敗，則處理各種錯誤情況（如超時或連接被拒絕）。
         private async void btnEnableTCP_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtClientIP.Text) || string.IsNullOrEmpty(txtClientPORT.Text))
@@ -101,7 +115,6 @@ namespace P2PChat
                         await Task.WhenAny(connectTask, Task.Delay(30000, cts.Token));
                         if (!connectTask.IsCompleted) throw new TimeoutException("連接超時");
                         if (!tcpClient.Connected) throw new SocketException((int)SocketError.ConnectionRefused);
-
                         // 連線成功後，等待伺服器的確認訊號
                         await WaitForServerConfirmation(tcpClient, cts.Token);
 
@@ -110,13 +123,12 @@ namespace P2PChat
                     catch (SocketException ex)
                     {
                         if (ex.SocketErrorCode == SocketError.ConnectionRefused)
-                            // 直接在這裡處理連線被拒絕的情況，而不是拋出新異常
-                            throw new SocketException((int)SocketError.ConnectionRefused); // 重新拋出原始的 SocketException
+                            throw new SocketException((int)SocketError.ConnectionRefused);
                         throw;
                     }
                 }
 
-                // 成功收到伺服器確認後，顯示連線成功並開啟聊天視窗
+                // 收到伺服器確認後，顯示連線成功並開啟聊天視窗
                 connectionTimer.Stop();
                 progressForm?.Close();
                 MessageBox.Show("連線已接受", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -132,7 +144,7 @@ namespace P2PChat
                     connectionTimer.Stop();
                     btnEnableTCP.Enabled = true;
                     progressForm?.Close();
-                    // 顯示特定的連線被拒絕訊息
+                    // 顯示連線被拒絕訊息
                     MessageBox.Show("連線被伺服器拒絕", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (ex is TimeoutException)
@@ -140,18 +152,17 @@ namespace P2PChat
                     connectionTimer.Stop();
                     btnEnableTCP.Enabled = true;
                     progressForm?.Close();
-                    // 顯示連接超時訊息
+                    // 連接超時訊息
                     MessageBox.Show("連接超時，伺服器無回應", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    // 處理其他類型的錯誤
                     HandleConnectionError(ex);
                 }
             }
         }
 
-        // 新增方法：等待伺服器的連線確認訊號
+        // 等待伺服器的連線確認訊號。會從網路資料流中讀取資料，直到收到特定的確認訊號（例如 "<ACCEPT_CHAT>"）或超時。
         private async Task WaitForServerConfirmation(TcpClient client, CancellationToken cancellationToken)
         {
             NetworkStream stream = client.GetStream();
@@ -161,7 +172,6 @@ namespace P2PChat
             try
             {
                 // 等待接收伺服器的確認訊號，例如 "<ACCEPT_CHAT>"
-                // 這裡設定一個讀取超時時間，防止無限期等待
                 using (var readCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, new CancellationTokenSource(TimeSpan.FromSeconds(10)).Token))
                 {
                     while (!readCts.IsCancellationRequested)
@@ -173,17 +183,16 @@ namespace P2PChat
                             // 檢查是否收到了接受訊號
                             if (receivedData.ToString().Contains("<ACCEPT_CHAT>"))
                             {
-                                return; // 收到確認訊號，方法完成
+                                return; 
                             }
-                            // 如果收到的數據不包含完整訊號，可能需要更複雜的緩衝區處理
                         }
                         else if (bytesRead == 0)
                         {
-                            // 連線已被遠端關閉 (伺服器拒絕或斷開)
-                            throw new SocketException((int)SocketError.ConnectionAborted); // 模擬連線中斷錯誤
+                            // 連線已被遠端關閉
+                            throw new SocketException((int)SocketError.ConnectionAborted);
                         }
                     }
-                    // 如果迴圈結束是因為取消，表示超時
+                    // 迴圈結束是因取消，表示超時
                     cancellationToken.ThrowIfCancellationRequested();
                 }
             }
@@ -197,9 +206,10 @@ namespace P2PChat
                 // 處理其他讀取錯誤
                 throw new Exception($"接收伺服器確認訊號錯誤: {ex.Message}", ex);
             }
+
         }
 
-        // 處理連接錯誤，顯示錯誤訊息並重置狀態
+        // 用於處理連接失敗時的錯誤。停止計時器，啟用連接按鈕，關閉進度視窗，顯示錯誤訊息。
         private void HandleConnectionError(Exception ex)
         {
             connectionTimer.Stop();
@@ -208,7 +218,7 @@ namespace P2PChat
             MessageBox.Show($"連接失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        // 計時器觸發事件，處理倒數計時和超時
+        // 計時器每秒觸發的事件處理器。更新進度視窗，並在計時結束時處理超時情況。
         private void ConnectionTimer_Tick(object sender, EventArgs e)
         {
             remainingSeconds--;
@@ -229,7 +239,6 @@ namespace P2PChat
                 }
             }
         }
-
         private void btnDisableTCP_Click(object sender, EventArgs e) => Close();
     }
 }
