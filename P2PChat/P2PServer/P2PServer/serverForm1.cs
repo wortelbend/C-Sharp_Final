@@ -9,7 +9,6 @@ using System.Text;
 
 namespace P2PServer
 {
-    // 伺服器主表單，處理TCP連接和客戶端監聽
     public partial class Form1 : Form
     {
         // TCP伺服器相關變數
@@ -78,7 +77,7 @@ namespace P2PServer
             }
         }
 
-        // 處理伺服器啟動/停止
+        // 伺服器啟動/停止
         private async void btnEnableServerTCP_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtServerIP.Text) || string.IsNullOrEmpty(txtServerPORT.Text))
@@ -115,7 +114,7 @@ namespace P2PServer
             }
         }
 
-        // 停止伺服器並重置所有狀態
+        // 停止伺服器並重置狀態
         private void StopServer()
         {
             tcpListener?.Stop();
@@ -137,32 +136,25 @@ namespace P2PServer
 
                     if (activeChatForm != null && !activeChatForm.IsDisposed)
                     {
-                        // 如果在接受新連線時發現已有活躍聊天視窗，通知並關閉新連線
+                        // 如新連線發現已有聊天視窗，通知並關閉新連線
                         MessageBox.Show("伺服器已忙碌，請稍後再試。", "連線被拒絕", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         newClient.Close(); // 關閉新的客戶端連線
-                        continue; // 跳過本次迴圈的後續處理，繼續等待下一個連線
+                        continue;
                     }
-
                     // 獲取客戶端 IP 地址
                     string clientIP = ((IPEndPoint)newClient.Client.RemoteEndPoint).Address.ToString();
-
                     // 在 UI 執行緒上顯示確認訊息框
                     DialogResult result = (DialogResult)this.Invoke((Func<DialogResult>)(() =>
                     {
-                        // 在顯示訊息框前，確保進度視窗已關閉
                         if (progressForm != null && !progressForm.IsDisposed) progressForm.Close();
                         return MessageBox.Show($"是否接受來自 {clientIP} 的連接？", "接受連接", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     }));
 
                     if (result == DialogResult.Yes)
                     {
-                        // 如果選擇接受
                         TcpClient client = newClient;
-
                         connectionTimer.Stop();
                         progressForm?.Close();
-                        // 暫時不安裝「客戶端已連接」的訊息框
-                        // MessageBox.Show("客戶端已連接", "連接成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         try
                         {
@@ -176,27 +168,21 @@ namespace P2PServer
                             // 如果發送訊號失敗，關閉連線並處理錯誤
                             MessageBox.Show($"發送接受訊號失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             client.Close();
-                            continue; // 跳過本次處理，繼續監聽
+                            continue; 
                         }
-
-                        // 建立並顯示新的聊天視窗，並儲存其引用
+                        // 顯示聊天視窗
                         activeChatForm = new ChatForm(client, this);
                         activeChatForm.FormClosed += ActiveChatForm_FormClosed;
                         activeChatForm.Show();
-
                         // 接受連線後停止監聽其他連線
                         StopServer();
-
-                        // 隱藏伺服器主表單
                         this.Hide();
-
                     }
                     else
                     {
-                        // 如果選擇拒絕
                         MessageBox.Show($"已拒絕來自 {clientIP} 的連接。", "連接被拒絕", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        newClient.Close(); // 關閉新的客戶端連線
-                        // 不呼叫 StopServer()，繼續監聽下一個連線請求
+                        newClient.Close();
+                        // 會繼續監聽下一個連線請求
                     }
                 }
             }
@@ -233,7 +219,6 @@ namespace P2PServer
         }
 
         private void btndisbleServerTCP_Click(object sender, EventArgs e) => Close();
-
         // 重置伺服器狀態
         public void ResetServerState()
         {
@@ -241,7 +226,8 @@ namespace P2PServer
             btnEnableServerTCP.Text = "開始監聽";
             btnEnableServerTCP.Enabled = true;
         }
-
+        //當活躍的聊天視窗關閉時
+        //activeChatForm清除對已關閉視窗的引用
         private void ActiveChatForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             activeChatForm = null;

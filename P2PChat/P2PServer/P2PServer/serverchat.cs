@@ -10,7 +10,6 @@ using System.Text;
 
 namespace P2PChat
 {
-    // 聊天視窗主表單，處理網路連接和訊息傳輸
     public partial class ChatForm : Form
     {
         // 網路連接相關變數
@@ -96,11 +95,13 @@ namespace P2PChat
             if (btnchat3 != null) btnchat3.Click += btnchat_Click;
         }
 
+        // 發送訊息。
         private void btnSend_Click(object sender, EventArgs e)
         {
             SendMessage();
         }
 
+        // 如果按下 Enter 鍵，會發送訊息，不會換行。
         private void txtMessage_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -111,6 +112,7 @@ namespace P2PChat
             }
         }
 
+        // 訊息輸入框文字改變的事件。會即時更新顯示可傳送字數的標籤。
         private void txtMessage_TextChanged(object sender, EventArgs e)
         {
             if (lblword != null && !lblword.IsDisposed)
@@ -119,6 +121,7 @@ namespace P2PChat
             }
         }
 
+        // 預設訊息按鈕將預設訊息垂傳送給對方。
         private void btnchat_Click(object sender, EventArgs e)
         {
             Button clickedButton = sender as Button;
@@ -162,6 +165,8 @@ namespace P2PChat
             }
         }
 
+        // 這個方法用於將文字訊息傳送給對方。檢查訊息長度，透過已建立的網路連接傳送。
+        // 支援透過 TcpClient 或 Socket 傳送，並在訊息發送後更新聊天記錄。
         private void SendMessage(string messageToSend = null)
         {
             string message = messageToSend ?? txtMessage.Text;
@@ -220,6 +225,7 @@ namespace P2PChat
             }
         }
 
+        //  一旦有新的連接，它會接受連接並啟動一個新的接收執行緒來處理該客戶端的訊息。
         private void ListenerThread()
         {
             try
@@ -242,6 +248,7 @@ namespace P2PChat
 
         private StringBuilder receiveBuffer = new StringBuilder();
 
+        // 持續讀取網路資料，將文字訊息和圖片顯示在聊天視窗。
         private void ReceiverThread()
         {
             if (_connectedClient == null || !_connectedClient.Connected)
@@ -390,6 +397,7 @@ namespace P2PChat
             }
         }
 
+        //用於停止監聽傳入的連接請求，並清理相關的 Socket 和執行緒資源。
         private void StopListening()
         {
             isListening = false;
@@ -406,6 +414,7 @@ namespace P2PChat
             AppendMessage("停止監聽");
         }
 
+        //斷開與客戶端的連接，並清理相關的 Socket 資源。
         private void DisconnectClient()
         {
             isConnected = false;
@@ -420,6 +429,8 @@ namespace P2PChat
             }
         }
 
+        // 用於在聊天訊息框中添加新的訊息，並可選擇清空現有訊息。
+        // 為了確保執行緒安全，會使用 InvokeRequired 檢查並在 UI 執行緒上執行更新操作。
         private void AppendMessage(string message, bool clear = false)
         {
             if (rtbMessages == null || rtbMessages.IsDisposed || this.IsDisposed || this.Disposing || !rtbMessages.IsHandleCreated) return;
@@ -454,11 +465,14 @@ namespace P2PChat
             }
         }
 
+        // 清空聊天訊息框中的所有訊息。
         private void btnclear_Click(object sender, EventArgs e)
         {
             AppendMessage(null, true);
         }
 
+        // 處理聊天視窗關閉彈出確認對話框，如果確認斷開連接，會向對方發送斷開連接的訊息，
+        // 關閉連接，並將父視窗重新顯示。
         private void ChatForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
@@ -508,19 +522,22 @@ namespace P2PChat
             }
         }
 
+        // 觸發視窗關閉事件，
         private void btndisconnect_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // 開啟圖片傳送視窗
+        // 傳送圖片按鈕的點擊事件。
+        // 開啟一個新的圖片傳送視窗 讓使用者選擇圖片並傳送。
         private void btnpicture_Click(object sender, EventArgs e)
         {
             Pictureform pictureForm = new Pictureform(_connectedClient);
             pictureForm.Show();
         }
 
-        // 停用所有控制項，用於斷線時
+        // 這個方法用於禁用聊天視窗中的一些控制項，例如訊息輸入框和傳送按鈕。
+        // 這通常在連接斷開或不允許發送訊息時使用。
         private void DisableControls()
         {
             if (txtMessage != null && btnSend != null)
@@ -535,7 +552,8 @@ namespace P2PChat
             if (btnreadpic != null && !btnreadpic.IsDisposed) btnreadpic.Enabled = false;
         }
 
-        // 開啟圖片預覽視窗
+        // 查看圖片按鈕點擊事件。
+        // 如PictureBox有圖片，會開啟視窗顯示該圖片。
         private void btnreadpic_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image != null)
@@ -550,7 +568,8 @@ namespace P2PChat
             }
         }
 
-        // 表情符號選單
+        // 表情符號按鈕點擊事件。會彈出一個小型的表情符號選單視窗，其中包含多個表情符號按鈕。
+        // 點擊表情符號後，該表情符號會顯示在訊息輸入框。
         private void btnemoji_Click(object sender, EventArgs e)
         {
             try
