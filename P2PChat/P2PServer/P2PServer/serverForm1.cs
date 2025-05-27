@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Threading.Tasks;
 using P2PChat;
+using System.Text;
 
 namespace P2PServer
 {
@@ -17,6 +18,7 @@ namespace P2PServer
         private int remainingSeconds = 30;
         private Form progressForm;
         public bool isServerRunning = false;
+        private ChatForm activeChatForm;
 
         public Form1()
         {
@@ -131,15 +133,71 @@ namespace P2PServer
             {
                 while (isServerRunning)
                 {
-                    TcpClient client = await tcpListener.AcceptTcpClientAsync();
+                    TcpClient newClient = await tcpListener.AcceptTcpClientAsync();
 
-                    connectionTimer.Stop();
-                    progressForm?.Close();
-                    MessageBox.Show("客戶端已連接", "連接成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (activeChatForm != null && !activeChatForm.IsDisposed)
+                    {
+                        // 如果在接受新連線時發現已有活躍聊天視窗，通知並關閉新連線
+                        MessageBox.Show("伺服器已忙碌，請稍後再試。", "連線被拒絕", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        newClient.Close(); // 關閉新的客戶端連線
+                        continue; // 跳過本次迴圈的後續處理，繼續等待下一個連線
+                    }
 
-                    var serverChatForm = new ChatForm(client, this);
-                    serverChatForm.Show();
-                    this.Hide();
+                    // 獲取客戶端 IP 地址
+                    string clientIP = ((IPEndPoint)newClient.Client.RemoteEndPoint).Address.ToString();
+
+                    // 在 UI 執行緒上顯示確認訊息框
+                    DialogResult result = (DialogResult)this.Invoke((Func<DialogResult>)(() =>
+                    {
+                        // 在顯示訊息框前，確保進度視窗已關閉
+                        if (progressForm != null && !progressForm.IsDisposed) progressForm.Close();
+                        return MessageBox.Show($"是否接受來自 {clientIP} 的連接？", "接受連接", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    }));
+
+                    if (result == DialogResult.Yes)
+                    {
+                        // 如果選擇接受
+                        TcpClient client = newClient;
+
+                        connectionTimer.Stop();
+                        progressForm?.Close();
+                        // 暫時不安裝「客戶端已連接」的訊息框
+                        // MessageBox.Show("客戶端已連接", "連接成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        try
+                        {
+                            // 向客戶端發送接受連線的確認訊號
+                            byte[] acceptSignal = Encoding.Unicode.GetBytes("<ACCEPT_CHAT>");
+                            NetworkStream stream = client.GetStream();
+                            await stream.WriteAsync(acceptSignal, 0, acceptSignal.Length);
+                        }
+                        catch (Exception ex)
+                        {
+                            // 如果發送訊號失敗，關閉連線並處理錯誤
+                            MessageBox.Show($"發送接受訊號失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            client.Close();
+                            continue; // 跳過本次處理，繼續監聽
+                        }
+
+                        // 建立並顯示新的聊天視窗，並儲存其引用
+                        activeChatForm = new ChatForm(client, this);
+                        activeChatForm.FormClosed += ActiveChatForm_FormClosed;
+                        activeChatForm.Show();
+
+                        // 接受連線後停止監聽其他連線
+                        StopServer();
+
+                        // 隱藏伺服器主表單
+                        this.Hide();
+
+                    }
+                    else
+                    {
+                        // 如果選擇拒絕
+                        MessageBox.Show($"已拒絕來自 {clientIP} 的連接。", "連接被拒絕", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        newClient.Close(); // 關閉新的客戶端連線
+                        // 不呼叫 StopServer()，繼續監聽下一個連線請求
+                    }
                 }
             }
             catch (Exception ex)
@@ -182,6 +240,11 @@ namespace P2PServer
             isServerRunning = false;
             btnEnableServerTCP.Text = "開始監聽";
             btnEnableServerTCP.Enabled = true;
+        }
+
+        private void ActiveChatForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            activeChatForm = null;
         }
     }
 }
