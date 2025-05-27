@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using P2PChat;
 using System.Text;
+using System.Linq; // 需要添加這個來使用 LINQ 的 .FirstOrDefault() 或 foreach
 
 namespace P2PServer
 {
@@ -42,8 +43,29 @@ namespace P2PServer
         {
             btnEnableServerTCP.Enabled = true;
             btnEnableServerTCP.Text = "開始監聽";
-            txtServerIP.Text = "127.0.0.1";
+            // 自動取得本機的 IPv4 位址
+            string localIP = GetLocalIPAddress();
+            txtServerIP.Text = !string.IsNullOrEmpty(localIP) ? localIP : "127.0.0.1";
             txtServerPORT.Text = "8888";
+        }
+
+        /// <summary>
+        /// 取得本機的 IPv4 位址。
+        /// </summary>
+        /// <returns>本機的 IPv4 位址字串，如果沒有找到則回傳 null。</returns>
+        private string GetLocalIPAddress()
+        {
+            // 取得本機的 DNS 資訊
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                // 篩選出 IPv4 位址
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            return null; // 如果沒有找到 IPv4 位址
         }
 
         // 顯示等待連接的進度視窗
@@ -91,7 +113,8 @@ namespace P2PServer
                 if (!isServerRunning)
                 {
                     int port = int.Parse(txtServerPORT.Text);
-                    tcpListener = new TcpListener(IPAddress.Any, port);
+                    // 使用 txtServerIP.Text 中顯示的 IP 位址來啟動 TcpListener
+                    tcpListener = new TcpListener(IPAddress.Parse(txtServerIP.Text), port);
                     tcpListener.Start();
                     isServerRunning = true;
                     btnEnableServerTCP.Text = "停止監聽";
@@ -168,7 +191,7 @@ namespace P2PServer
                             // 如果發送訊號失敗，關閉連線並處理錯誤
                             MessageBox.Show($"發送接受訊號失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             client.Close();
-                            continue; 
+                            continue;
                         }
                         // 顯示聊天視窗
                         activeChatForm = new ChatForm(client, this);
@@ -195,7 +218,6 @@ namespace P2PServer
                 }
             }
         }
-
         // 處理等待計時器事件
         private void ConnectionTimer_Tick(object sender, EventArgs e)
         {
@@ -226,8 +248,7 @@ namespace P2PServer
             btnEnableServerTCP.Text = "開始監聽";
             btnEnableServerTCP.Enabled = true;
         }
-        //當活躍的聊天視窗關閉時
-        //activeChatForm清除對已關閉視窗的引用
+        //當目前聊天視窗關閉時 activeChatForm清除關閉視窗的引用
         private void ActiveChatForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             activeChatForm = null;
