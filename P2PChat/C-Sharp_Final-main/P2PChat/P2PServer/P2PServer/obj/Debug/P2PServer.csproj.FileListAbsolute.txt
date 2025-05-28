@@ -1,0 +1,13 @@
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\bin\Debug\P2PServer.exe.config
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\bin\Debug\P2PServer.exe
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\bin\Debug\P2PServer.pdb
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.csproj.AssemblyReference.cache
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.SercerPictureForm.resources
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PChat.ChatForm.resources
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.Form1.resources
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.Properties.Resources.resources
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.ViewPictureForm.resources
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.csproj.GenerateResource.cache
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.csproj.CoreCompileInputs.cache
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.exe
+C:\Users\g5110\Downloads\C-Sharp_Final-main\C-Sharp_Final-main\P2PChat\P2PServer\P2PServer\obj\Debug\P2PServer.pdb
