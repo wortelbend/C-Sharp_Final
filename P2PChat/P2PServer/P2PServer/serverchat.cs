@@ -117,7 +117,7 @@ namespace P2PChat
         {
             if (lblword != null && !lblword.IsDisposed)
             {
-                lblword.Text = $"可傳送字數：{txtMessage.Text.Length}/500";
+                lblword.Text = $"可傳送字數限制：{txtMessage.Text.Length}/500";
             }
         }
 

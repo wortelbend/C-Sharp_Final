@@ -35,7 +35,9 @@ namespace P2PChat
             this.lblword = new System.Windows.Forms.Label();
             this.btnreadpic = new System.Windows.Forms.Button();
             this.btnemoji = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtbMessages
@@ -45,7 +47,7 @@ namespace P2PChat
             this.rtbMessages.Location = new System.Drawing.Point(0, 2);
             this.rtbMessages.Name = "rtbMessages";
             this.rtbMessages.ReadOnly = true;
-            this.rtbMessages.Size = new System.Drawing.Size(571, 481);
+            this.rtbMessages.Size = new System.Drawing.Size(571, 491);
             this.rtbMessages.TabIndex = 2;
             this.rtbMessages.Text = "";
             // 
@@ -53,7 +55,7 @@ namespace P2PChat
             // 
             this.txtMessage.BackColor = System.Drawing.SystemColors.Window;
             this.txtMessage.Font = new System.Drawing.Font("新細明體", 14F);
-            this.txtMessage.Location = new System.Drawing.Point(12, 532);
+            this.txtMessage.Location = new System.Drawing.Point(3, 50);
             this.txtMessage.Multiline = true;
             this.txtMessage.Name = "txtMessage";
             this.txtMessage.Size = new System.Drawing.Size(654, 47);
@@ -62,10 +64,11 @@ namespace P2PChat
             // btnSend
             // 
             this.btnSend.BackColor = System.Drawing.SystemColors.Window;
+            this.btnSend.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnSend.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnSend.Location = new System.Drawing.Point(685, 533);
+            this.btnSend.Location = new System.Drawing.Point(844, 0);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(108, 46);
+            this.btnSend.Size = new System.Drawing.Size(108, 100);
             this.btnSend.TabIndex = 4;
             this.btnSend.Text = "發送";
             this.btnSend.UseVisualStyleBackColor = false;
@@ -74,10 +77,10 @@ namespace P2PChat
             // 
             this.txtchat1.BackColor = System.Drawing.SystemColors.Window;
             this.txtchat1.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.txtchat1.Location = new System.Drawing.Point(21, 495);
+            this.txtchat1.Location = new System.Drawing.Point(12, 11);
             this.txtchat1.Multiline = true;
             this.txtchat1.Name = "txtchat1";
-            this.txtchat1.Size = new System.Drawing.Size(155, 33);
+            this.txtchat1.Size = new System.Drawing.Size(121, 33);
             this.txtchat1.TabIndex = 5;
             this.txtchat1.Text = "您好!";
             // 
@@ -85,7 +88,7 @@ namespace P2PChat
             // 
             this.btnchat1.BackColor = System.Drawing.SystemColors.Window;
             this.btnchat1.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnchat1.Location = new System.Drawing.Point(182, 494);
+            this.btnchat1.Location = new System.Drawing.Point(139, 11);
             this.btnchat1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnchat1.Name = "btnchat1";
             this.btnchat1.Size = new System.Drawing.Size(100, 33);
@@ -97,7 +100,7 @@ namespace P2PChat
             // 
             this.btnchat2.BackColor = System.Drawing.SystemColors.Window;
             this.btnchat2.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnchat2.Location = new System.Drawing.Point(534, 495);
+            this.btnchat2.Location = new System.Drawing.Point(408, 12);
             this.btnchat2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnchat2.Name = "btnchat2";
             this.btnchat2.Size = new System.Drawing.Size(100, 33);
@@ -109,10 +112,10 @@ namespace P2PChat
             // 
             this.txtchat2.BackColor = System.Drawing.SystemColors.Window;
             this.txtchat2.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.txtchat2.Location = new System.Drawing.Point(373, 495);
+            this.txtchat2.Location = new System.Drawing.Point(281, 12);
             this.txtchat2.Multiline = true;
             this.txtchat2.Name = "txtchat2";
-            this.txtchat2.Size = new System.Drawing.Size(155, 33);
+            this.txtchat2.Size = new System.Drawing.Size(121, 33);
             this.txtchat2.TabIndex = 7;
             this.txtchat2.Text = "再見";
             // 
@@ -120,7 +123,7 @@ namespace P2PChat
             // 
             this.btnchat3.BackColor = System.Drawing.SystemColors.Window;
             this.btnchat3.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnchat3.Location = new System.Drawing.Point(834, 494);
+            this.btnchat3.Location = new System.Drawing.Point(691, 12);
             this.btnchat3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnchat3.Name = "btnchat3";
             this.btnchat3.Size = new System.Drawing.Size(100, 33);
@@ -131,10 +134,10 @@ namespace P2PChat
             // txtchat3
             // 
             this.txtchat3.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.txtchat3.Location = new System.Drawing.Point(673, 495);
+            this.txtchat3.Location = new System.Drawing.Point(556, 12);
             this.txtchat3.Multiline = true;
             this.txtchat3.Name = "txtchat3";
-            this.txtchat3.Size = new System.Drawing.Size(155, 33);
+            this.txtchat3.Size = new System.Drawing.Size(121, 33);
             this.txtchat3.TabIndex = 9;
             this.txtchat3.Text = "沒問題";
             // 
@@ -142,9 +145,9 @@ namespace P2PChat
             // 
             this.btndisconnect.BackColor = System.Drawing.SystemColors.Window;
             this.btndisconnect.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btndisconnect.Location = new System.Drawing.Point(443, 584);
+            this.btndisconnect.Location = new System.Drawing.Point(601, 448);
             this.btndisconnect.Name = "btndisconnect";
-            this.btndisconnect.Size = new System.Drawing.Size(491, 35);
+            this.btndisconnect.Size = new System.Drawing.Size(304, 35);
             this.btndisconnect.TabIndex = 11;
             this.btndisconnect.Text = "斷開連線";
             this.btndisconnect.UseVisualStyleBackColor = false;
@@ -153,7 +156,7 @@ namespace P2PChat
             // 
             this.btnclear.BackColor = System.Drawing.SystemColors.Window;
             this.btnclear.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnclear.Location = new System.Drawing.Point(12, 581);
+            this.btnclear.Location = new System.Drawing.Point(601, 391);
             this.btnclear.Name = "btnclear";
             this.btnclear.Size = new System.Drawing.Size(304, 38);
             this.btnclear.TabIndex = 4;
@@ -196,11 +199,11 @@ namespace P2PChat
             // 
             this.lblword.AutoSize = true;
             this.lblword.Font = new System.Drawing.Font("新細明體", 16F);
-            this.lblword.Location = new System.Drawing.Point(588, 461);
+            this.lblword.Location = new System.Drawing.Point(8, 496);
             this.lblword.Name = "lblword";
-            this.lblword.Size = new System.Drawing.Size(172, 22);
+            this.lblword.Size = new System.Drawing.Size(216, 22);
             this.lblword.TabIndex = 15;
-            this.lblword.Text = "可傳送字數:0/500";
+            this.lblword.Text = "可傳送字數限制:0/500";
             // 
             // btnreadpic
             // 
@@ -218,12 +221,29 @@ namespace P2PChat
             // 
             this.btnemoji.BackColor = System.Drawing.SystemColors.Window;
             this.btnemoji.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnemoji.Location = new System.Drawing.Point(826, 534);
+            this.btnemoji.Location = new System.Drawing.Point(683, 50);
             this.btnemoji.Name = "btnemoji";
             this.btnemoji.Size = new System.Drawing.Size(108, 46);
             this.btnemoji.TabIndex = 4;
             this.btnemoji.Text = "表情選單";
             this.btnemoji.UseVisualStyleBackColor = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.txtMessage);
+            this.panel1.Controls.Add(this.txtchat1);
+            this.panel1.Controls.Add(this.btnchat1);
+            this.panel1.Controls.Add(this.txtchat2);
+            this.panel1.Controls.Add(this.btnchat2);
+            this.panel1.Controls.Add(this.txtchat3);
+            this.panel1.Controls.Add(this.btnchat3);
+            this.panel1.Controls.Add(this.btnSend);
+            this.panel1.Controls.Add(this.btnemoji);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 521);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(952, 100);
+            this.panel1.TabIndex = 16;
             // 
             // ChatForm
             // 
@@ -232,25 +252,19 @@ namespace P2PChat
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(952, 621);
             this.Controls.Add(this.lblword);
+            this.Controls.Add(this.btnclear);
             this.Controls.Add(this.btnpicture);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btndisconnect);
-            this.Controls.Add(this.btnchat3);
-            this.Controls.Add(this.txtchat3);
             this.Controls.Add(this.btnreadpic);
-            this.Controls.Add(this.btnchat2);
-            this.Controls.Add(this.txtchat2);
-            this.Controls.Add(this.btnchat1);
-            this.Controls.Add(this.txtchat1);
             this.Controls.Add(this.rtbMessages);
-            this.Controls.Add(this.txtMessage);
-            this.Controls.Add(this.btnclear);
-            this.Controls.Add(this.btnemoji);
-            this.Controls.Add(this.btnSend);
+            this.Controls.Add(this.panel1);
             this.Name = "ChatForm";
             this.Text = "P2P 聊天(伺服器端)";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,5 +287,6 @@ namespace P2PChat
         private Label lblword;
         private Button btnreadpic;
         private Button btnemoji;
+        private Panel panel1;
     }
 }
