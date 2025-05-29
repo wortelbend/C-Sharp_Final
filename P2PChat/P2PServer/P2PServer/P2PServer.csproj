@@ -46,11 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SercerPictureForm.cs">
+    <Compile Include="ServerPictureForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SercerPictureForm.Designer.cs">
-      <DependentUpon>SercerPictureForm.cs</DependentUpon>
+    <Compile Include="ServerPictureForm.Designer.cs">
+      <DependentUpon>ServerPictureForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ServerChatForm.cs">
       <SubType>Form</SubType>
@@ -72,8 +72,8 @@
     <Compile Include="ViewPictureForm.Designer.cs">
       <DependentUpon>ServerViewPictureForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SercerPictureForm.resx">
-      <DependentUpon>SercerPictureForm.cs</DependentUpon>
+    <EmbeddedResource Include="ServerPictureForm.resx">
+      <DependentUpon>ServerPictureForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ServerChatForm.resx">
       <DependentUpon>ServerChatForm.cs</DependentUpon>
