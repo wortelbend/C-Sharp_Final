@@ -554,7 +554,7 @@ namespace P2PChat
         // 開啟一個新的圖片傳送視窗 讓使用者選擇圖片並傳送。
         private void btnpicture_Click(object sender, EventArgs e)
         {
-            SercerPictureForm pictureForm = new SercerPictureForm(_connectedClient);
+            ServerPictureForm pictureForm = new ServerPictureForm(_connectedClient);
             pictureForm.Show();
         }
 
