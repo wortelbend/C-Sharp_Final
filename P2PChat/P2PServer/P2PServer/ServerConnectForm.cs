@@ -12,7 +12,7 @@ namespace P2PServer
 {
     public partial class Form1 : Form
     {
-        // TCP伺服器相關變數
+        // TCP伺相關變數
         private TcpListener tcpListener;
         private System.Windows.Forms.Timer connectionTimer;
         private int remainingSeconds = 30;
@@ -194,6 +194,7 @@ namespace P2PServer
                             continue;
                         }
                         // 顯示聊天視窗
+                        MessageBox.Show("連線已確認", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         activeChatForm = new ChatForm(client, this);
                         activeChatForm.FormClosed += ActiveChatForm_FormClosed;
                         activeChatForm.Show();
@@ -252,6 +253,11 @@ namespace P2PServer
         private void ActiveChatForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             activeChatForm = null;
+        }
+
+        private void btndisbleServerTCP_Click_1(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

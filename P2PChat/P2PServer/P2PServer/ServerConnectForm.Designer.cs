@@ -91,7 +91,7 @@
             this.btndisbleServerTCP.TabIndex = 5;
             this.btndisbleServerTCP.Text = "關閉程式";
             this.btndisbleServerTCP.UseVisualStyleBackColor = true;
-            this.btndisbleServerTCP.Click += new System.EventHandler(this.btndisbleServerTCP_Click);
+            this.btndisbleServerTCP.Click += new System.EventHandler(this.btndisbleServerTCP_Click_1);
             // 
             // Form1
             // 
