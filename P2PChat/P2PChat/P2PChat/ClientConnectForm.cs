@@ -11,7 +11,7 @@ namespace P2PChat
 {
     public partial class ClientConnectForm : Form
     {
-        // 客戶端連接相關變數
+        // TCP相關變數
         private System.Windows.Forms.Timer connectionTimer;
         private int remainingSeconds = 30;
         private TcpClient tcpClient;
@@ -25,7 +25,7 @@ namespace P2PChat
             this.VisibleChanged += Form1_VisibleChanged;
         }
 
-        // 初始化計時器，每秒觸發一次。
+        // 初始化計時器，每秒觸發一次
         private void InitializeTimer()
         {
             connectionTimer = new System.Windows.Forms.Timer { Interval = 1000, Enabled = false };
@@ -44,7 +44,7 @@ namespace P2PChat
             if (this.Visible) btnEnableTCP.Enabled = true;
         }
 
-        // 顯示一個連接進度視窗，包含一個倒數計時器。
+        // 顯示連接進度視窗，含倒數計時器
         private void ShowProgressForm()
         {
             progressForm = new Form
@@ -69,18 +69,17 @@ namespace P2PChat
             progressForm.Show();
         }
 
-        // 處理進度視窗關閉的事件。當進度視窗關閉時，會重新啟用連接按鈕並清除 progressForm 的引用。
+        // 當進度視窗關閉時，重新啟用連接按鈕並清除 progressForm 引用
         private void ProgressForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // 當進度視窗關閉時，重新啟用按鈕，並清理 progressForm 引用
-            if (btnEnableTCP != null && !btnEnableTCP.IsDisposed) // 確保按鈕物件存在且未被 disposed
+            if (btnEnableTCP != null && !btnEnableTCP.IsDisposed) 
             {
                 btnEnableTCP.Enabled = true;
             }
             progressForm = null;
         }
 
-        // 更新視窗中顯示的倒數計時。
+        // 更新視窗中顯示的倒數計時
         private void UpdateProgressForm()
         {
             if (progressForm?.IsDisposed == false)
@@ -89,7 +88,7 @@ namespace P2PChat
             }
         }
 
-        // 嘗試建立一個 TCP 連接，並在連接過程中顯示進度視窗和倒數計時。如果連接成功，它會開啟聊天視窗；如果失敗，則處理各種錯誤情況（如超時或連接被拒絕）。
+        // 嘗試建立一個 TCP 連接，在連接過程中顯示進度視窗和倒數計時
         private async void btnEnableTCP_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtClientIP.Text) || string.IsNullOrEmpty(txtClientPORT.Text))
@@ -144,7 +143,7 @@ namespace P2PChat
                     connectionTimer.Stop();
                     btnEnableTCP.Enabled = true;
                     progressForm?.Close();
-                    // 顯示連線被拒絕訊息
+                    // 被拒絕訊息
                     MessageBox.Show("找無伺服器", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (ex is TimeoutException)
@@ -209,16 +208,16 @@ namespace P2PChat
 
         }
 
-        // 用於處理連接失敗時的錯誤。停止計時器，啟用連接按鈕，關閉進度視窗，顯示錯誤訊息。
+        // 連接失敗錯誤。停止計時器，啟用連接按鈕，關閉進度視窗，顯示錯誤訊息。
         private void HandleConnectionError(Exception ex)
         {
             connectionTimer.Stop();
             btnEnableTCP.Enabled = true;
             progressForm?.Close();
-            MessageBox.Show($"連接失敗：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"連接失敗：伺服器拒絕連線", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        // 計時器每秒觸發的事件處理器。更新進度視窗，並在計時結束時處理超時情況。
+        // 計時器每秒觸發。更新進度視窗，並在計時結束時處理超時情況。
         private void ConnectionTimer_Tick(object sender, EventArgs e)
         {
             remainingSeconds--;
