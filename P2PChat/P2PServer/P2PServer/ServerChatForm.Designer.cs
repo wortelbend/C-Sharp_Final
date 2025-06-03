@@ -201,9 +201,9 @@ namespace P2PChat
             this.lblword.Font = new System.Drawing.Font("新細明體", 16F);
             this.lblword.Location = new System.Drawing.Point(8, 496);
             this.lblword.Name = "lblword";
-            this.lblword.Size = new System.Drawing.Size(216, 22);
+            this.lblword.Size = new System.Drawing.Size(136, 22);
             this.lblword.TabIndex = 15;
-            this.lblword.Text = "可傳送字數限制:0/500";
+            this.lblword.Text = "已輸入字數:0";
             // 
             // btnreadpic
             // 
@@ -239,7 +239,6 @@ namespace P2PChat
             this.panel1.Controls.Add(this.btnchat3);
             this.panel1.Controls.Add(this.btnSend);
             this.panel1.Controls.Add(this.btnemoji);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 521);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(952, 100);
