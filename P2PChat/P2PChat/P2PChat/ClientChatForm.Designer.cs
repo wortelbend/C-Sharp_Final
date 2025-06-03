@@ -201,9 +201,9 @@ namespace P2PChat
             lblword.Font = new Font("新細明體", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 136);
             lblword.Location = new Point(4, 502);
             lblword.Name = "lblword";
-            lblword.Size = new Size(207, 21);
+            lblword.Size = new Size(130, 21);
             lblword.TabIndex = 15;
-            lblword.Text = "可傳送字數限制:0/500";
+            lblword.Text = "已輸入字數:0";
             // 
             // btnreadpic
             // 
@@ -243,7 +243,7 @@ namespace P2PChat
             panel1.Size = new Size(952, 95);
             panel1.TabIndex = 17;
             // 
-            // ChatForm
+            // ClientChatForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -260,7 +260,7 @@ namespace P2PChat
             Controls.Add(btnclear);
             Controls.Add(panel1);
             Margin = new Padding(4);
-            Name = "ChatForm";
+            Name = "ClientChatForm";
             Text = "P2P聊天室(客戶端)";
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
