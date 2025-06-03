@@ -38,7 +38,6 @@
             // 
             // lblClientIP
             // 
-            lblClientIP.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lblClientIP.AutoSize = true;
             lblClientIP.Font = new Font("Microsoft JhengHei UI", 16F);
             lblClientIP.Location = new Point(78, 149);
@@ -50,7 +49,6 @@
             // 
             // txtClientIP
             // 
-            txtClientIP.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtClientIP.Font = new Font("Microsoft JhengHei UI", 16F);
             txtClientIP.Location = new Point(174, 146);
             txtClientIP.Name = "txtClientIP";
@@ -59,7 +57,6 @@
             // 
             // lblClientPORT
             // 
-            lblClientPORT.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lblClientPORT.AutoSize = true;
             lblClientPORT.Font = new Font("Microsoft JhengHei UI", 16F);
             lblClientPORT.Location = new Point(404, 153);
@@ -70,7 +67,6 @@
             // 
             // txtClientPORT
             // 
-            txtClientPORT.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtClientPORT.Font = new Font("Microsoft JhengHei UI", 16F);
             txtClientPORT.Location = new Point(466, 149);
             txtClientPORT.Name = "txtClientPORT";
@@ -79,7 +75,6 @@
             // 
             // btnEnableTCP
             // 
-            btnEnableTCP.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             btnEnableTCP.Font = new Font("Microsoft JhengHei UI", 16F);
             btnEnableTCP.Location = new Point(174, 254);
             btnEnableTCP.Name = "btnEnableTCP";
@@ -90,7 +85,6 @@
             // 
             // btnDisableTCP
             // 
-            btnDisableTCP.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             btnDisableTCP.Font = new Font("Microsoft JhengHei UI", 16F);
             btnDisableTCP.Location = new Point(466, 254);
             btnDisableTCP.Name = "btnDisableTCP";
@@ -100,7 +94,7 @@
             btnDisableTCP.UseVisualStyleBackColor = true;
             btnDisableTCP.Click += btnDisableTCP_Click;
             // 
-            // Form1
+            // ClientConnectForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -111,7 +105,7 @@
             Controls.Add(lblClientPORT);
             Controls.Add(txtClientIP);
             Controls.Add(lblClientIP);
-            Name = "Form1";
+            Name = "ClientConnectForm";
             Text = "客戶端登入畫面";
             Load += Form1_Load;
             ResumeLayout(false);

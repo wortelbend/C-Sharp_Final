@@ -134,7 +134,7 @@ namespace P2PChat
         {
             if (lblword != null && !lblword.IsDisposed)
             {
-                lblword.Text = $"可傳送字數限制：{txtMessage.Text.Length}/500";
+                lblword.Text = $"已輸入字數：{txtMessage.Text.Length}";
             }
         }
 
@@ -188,12 +188,6 @@ namespace P2PChat
         {
             string message = messageToSend ?? txtMessage.Text;
             if (string.IsNullOrEmpty(message)) return;
-
-            if (message.Length > 500)
-            {
-                AppendMessage("系統提示：訊息長度超過上限（500字），無法傳送");
-                return;
-            }
 
             try
             {
