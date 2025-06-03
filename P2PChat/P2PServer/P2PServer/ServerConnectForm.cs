@@ -16,7 +16,6 @@ namespace P2PServer
         // TCP伺服器相關變數
         private TcpListener tcpListener;
         private System.Windows.Forms.Timer connectionTimer;
-        private int remainingSeconds = 30;
         private Form progressForm;
         public bool isServerRunning = false;
         // private ChatForm activeChatForm; // OLD: For single chat
@@ -39,7 +38,6 @@ namespace P2PServer
                 Interval = 1000,
                 Enabled = false
             };
-            connectionTimer.Tick += ConnectionTimer_Tick;
         }
 
         // 初始化伺服器設定
@@ -88,7 +86,7 @@ namespace P2PServer
             progressForm.Controls.Add(new Label
             {
                 Name = "lblProgressStatus", // Give it a name for easier access
-                Text = $"等待客戶端連接...\n剩餘時間：{remainingSeconds}秒",
+                Text = $"等待客戶端連接...",
                 AutoSize = true,
                 Location = new Point(20, 20)
             });
@@ -104,7 +102,7 @@ namespace P2PServer
                 var lbl = progressForm.Controls.Find("lblProgressStatus", true).FirstOrDefault() as Label;
                 if (lbl != null)
                 {
-                    lbl.Text = $"等待客戶端連接...\n剩餘時間：{remainingSeconds}秒";
+                    lbl.Text = $"等待客戶端連接...";
                 }
             }
         }
@@ -130,7 +128,6 @@ namespace P2PServer
                     txtServerIP.Enabled = false; // Disable editing while server is running
                     txtServerPORT.Enabled = false;
 
-                    remainingSeconds = 30; // Reset timer for the first connection attempt
                     ShowProgressForm(); // Show progress form
                     connectionTimer.Start(); // Start timer only when starting server
 
@@ -281,58 +278,7 @@ namespace P2PServer
             }
         }
 
-        // 處理等待計時器事件
-        private void ConnectionTimer_Tick(object sender, EventArgs e)
-        {
-            remainingSeconds--;
-            UpdateProgressForm();
 
-            if (remainingSeconds <= 0)
-            {
-                connectionTimer.Stop();
-                // Only stop the server if it's running AND no clients have connected yet.
-                // If activeChatForms.Count is > 0, it means at least one client connected,
-                // and the timer should have been stopped. This is a fallback.
-                if (isServerRunning && activeChatForms.Count == 0)
-                {
-                    if (progressForm?.IsDisposed == false)
-                    {
-                        this.Invoke((MethodInvoker)delegate
-                        {
-                            var lbl = progressForm.Controls.Find("lblProgressStatus", true).FirstOrDefault() as Label;
-                            if (lbl != null)
-                            {
-                                lbl.Text = "未收到連接請求。伺服器將停止。";
-                                lbl.ForeColor = Color.Red;
-                            }
-                            // Give user a moment to see the message before closing progress and stopping server
-                            Task.Delay(2000).ContinueWith(t =>
-                            {
-                                this.Invoke((MethodInvoker)delegate
-                                {
-                                    progressForm?.Close();
-                                    progressForm?.Dispose();
-                                    StopServer(); // Stop the server
-                                });
-                            });
-                        });
-                    }
-                    else
-                    {
-                        StopServer(); // Stop the server
-                    }
-                    MessageBox.Show("等待超時，未收到任何客戶端連接請求。", "超時", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                else if (isServerRunning && activeChatForms.Count > 0)
-                {
-                    // This case (timer ticks to 0 but clients are connected) ideally shouldn't happen
-                    // as the timer should be stopped upon first client connection.
-                    // If it does, just close the progress form if it's somehow still open.
-                    progressForm?.Close();
-                    progressForm?.Dispose();
-                }
-            }
-        }
 
         // This button is likely intended to close the main server form
         private void btndisbleServerTCP_Click_1(object sender, EventArgs e) // Renamed from your example if it was different
