@@ -649,5 +649,31 @@ namespace P2PChat
                 MessageBox.Show($"開啟表情符號選單時發生錯誤：{ex.Message}", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        // 在 ServerChatForm.cs 檔案中，使用這個新版本來替換舊的 ForceClose()
+        public void ForceClose()
+        {
+            // 步驟 1: 先手動發送斷線訊號給客戶端
+            if (_connectedClient != null && _connectedClient.Connected)
+            {
+                try
+                {
+                    // 這裡直接使用 SendMessage 方法來發送斷線訊號，確保邏輯一致
+                    SendMessage("<DISCONNECT>");
+                    // 給予一個極短的緩衝時間，確保訊息有機會發送出去
+                    System.Threading.Thread.Sleep(50);
+                }
+                catch (Exception ex)
+                {
+                    // 在強制關閉時，即使發送失敗也沒關係，繼續執行關閉流程
+                    Console.WriteLine("Error sending disconnect signal on force close: " + ex.Message);
+                }
+            }
+
+            // 步驟 2: 取消訂閱 FormClosing 事件，避免觸發確認視窗
+            this.FormClosing -= ChatForm_FormClosing;
+
+            // 步驟 3: 直接關閉視窗
+            this.Close();
+        }
     }
 }
