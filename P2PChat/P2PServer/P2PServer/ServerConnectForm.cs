@@ -18,14 +18,14 @@ namespace P2PServer
         private Form progressForm;
         private bool isListenerActive = false;
         private List<ChatForm> activeChatForms = new List<ChatForm>();
-        private readonly object _lock = new object(); // 用於鎖定列表，確保執行緒安全
+        private readonly object _lock = new object(); 
 
         public Form1()
         {
             InitializeComponent();
             InitializeTimer();
             btnEnableServerTCP.Click += btnEnableServerTCP_Click;
-            this.FormClosing += Form1_FormClosing; // 將關閉事件綁定在建構函式
+            this.FormClosing += Form1_FormClosing; 
         }
 
         // 初始化等待連接計時器
@@ -46,10 +46,10 @@ namespace P2PServer
             txtServerPORT.Text = "8888";
         }
 
-        // 伺服器啟動/停止按鈕事件 (已重構)
+        // 伺服器啟動/停止按鈕事件
         private async void btnEnableServerTCP_Click(object sender, EventArgs e)
         {
-            if (!isListenerActive) // 如果目前是停止狀態，則執行「啟動監聽」
+            if (!isListenerActive) 
             {
                 if (string.IsNullOrEmpty(txtServerIP.Text) || string.IsNullOrEmpty(txtServerPORT.Text))
                 {
@@ -75,7 +75,7 @@ namespace P2PServer
                     UpdateUIState(false);
                 }
             }
-            else // 如果目前是監聽狀態，則執行「停止監聽」
+            else 
             {
                 CleanupListener();
                 UpdateUIState(false);
@@ -97,7 +97,7 @@ namespace P2PServer
             }
         }
 
-        // 監聽客戶端連線的非同步方法
+        // 非同步監聽客戶端連線
         private async Task ListenForClientsAsync()
         {
             try
@@ -130,7 +130,7 @@ namespace P2PServer
             }
         }
 
-        // 處理新客戶端連線的方法
+        // 處理新客戶端連線
         private async void HandleNewClient(TcpClient newClient)
         {
             string clientIP = ((IPEndPoint)newClient.Client.RemoteEndPoint).Address.ToString();
@@ -165,13 +165,13 @@ namespace P2PServer
             }
         }
 
-        // 「關閉程式」按鈕的事件
+        // 關閉程式 按鈕
         private void btndisbleServerTCP_Click_1(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // 當子聊天視窗關閉時的事件
+        // 子聊天視窗關閉
         private void ChatForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (sender is ChatForm closedForm)
@@ -183,7 +183,7 @@ namespace P2PServer
             }
         }
 
-        // 主視窗正在關閉時的事件 (處理'X'按鈕和Close()方法)
+        // 主視窗關閉 (處理'X'按鈕和Close())
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (activeChatForms.Count > 0 || isListenerActive)
@@ -194,17 +194,15 @@ namespace P2PServer
                                                      MessageBoxIcon.Warning);
                 if (result == DialogResult.No)
                 {
-                    e.Cancel = true; // 取消關閉事件
+                    e.Cancel = true; 
                 }
                 else
                 {
-                    CleanupListener(); // 先停止監聽
-                    CloseAllChatForms(); // 再關閉所有視窗
+                    CleanupListener(); 
+                    CloseAllChatForms(); 
                 }
             }
         }
-
-        // ================== 輔助方法 (請將這些放在類別的大括號 {} 內) ==================
 
         private string GetLocalIPAddress()
         {
@@ -274,7 +272,6 @@ namespace P2PServer
 
             foreach (var chatForm in formsToClose)
             {
-                // 使用我們之前寫好的強制關閉方法，確保客戶端能收到通知
                 chatForm.ForceClose();
             }
 
