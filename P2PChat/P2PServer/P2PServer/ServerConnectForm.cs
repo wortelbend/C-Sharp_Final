@@ -144,7 +144,7 @@ namespace P2PServer
                     await newClient.GetStream().WriteAsync(acceptSignal, 0, acceptSignal.Length);
 
                     MessageBox.Show($"與 {clientIP} 的連線已確認", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ChatForm chatSession = new ChatForm(newClient, this);
+                    ChatForm chatSession = new ChatForm(newClient, this, clientIP);
                     chatSession.FormClosed += ChatForm_FormClosed;
 
                     lock (_lock)

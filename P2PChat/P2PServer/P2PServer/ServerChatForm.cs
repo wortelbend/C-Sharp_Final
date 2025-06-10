@@ -41,27 +41,16 @@ namespace P2PChat
             this.FormClosing += ChatForm_FormClosing;
         }
 
-        public ChatForm(TcpClient connectedClient)
-        {
-            InitializeComponent();
-            _connectedClient = connectedClient;
-            this.FormClosing += ChatForm_FormClosing;
-
-            thrReceiver = new Thread(new ThreadStart(ReceiverThread));
-            thrReceiver.IsBackground = true;
-            thrReceiver.Start();
-
-            AppendMessage("連線成功！");
-            SetupEventHandlers();
-        }
-
-        public ChatForm(TcpClient connectedClient, Form parentForm)
+        public ChatForm(TcpClient connectedClient, Form parentForm, string clientIP)
         {
             InitializeComponent();
             _connectedClient = connectedClient;
             _parentForm = parentForm;
             this.FormClosing += ChatForm_FormClosing;
 
+            // 將設定視窗標題的程式碼加在這裡
+            this.Text = $"與 {clientIP} 的聊天室";
+
             thrReceiver = new Thread(new ThreadStart(ReceiverThread));
             thrReceiver.IsBackground = true;
             thrReceiver.Start();
@@ -69,6 +58,7 @@ namespace P2PChat
             AppendMessage("連線成功！");
             SetupEventHandlers();
         }
+
 
         // 初始化網路設定
         private void InitializeNetwork()
