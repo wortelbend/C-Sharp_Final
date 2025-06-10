@@ -19,7 +19,7 @@ namespace P2PChat
             _connectedClient = connectedClient;
             SetupEventHandlers();
         }
-        /// 用於設定視窗中所有按鈕的點擊事件處理器，將按鈕的 Click 事件與對應的方法連結起來。
+        /// 用於設定視窗中所有按鈕的點擊事件處理器，將按鈕的 Click 事件與對應的方法連結起來
         private void SetupEventHandlers()
         {
             btnPCpicture.Click += btnPCpicture_Click;
@@ -27,7 +27,8 @@ namespace P2PChat
             btnsend.Click += btnsend_Click;
             btncancel.Click += btncancel_Click;
         }
-        /// 處理使用者點擊「從電腦選擇圖片」按鈕的事件。會開啟一個檔案對話框，讓使用者從本機電腦選擇一張圖片檔案，並將選定的圖片載入到 PictureBox 中顯示，同時檢查圖片大小是否超過 5MB。
+        /// 點擊 從電腦選擇圖片 按鈕
+        /// 開啟一個檔案對話框，從本機電腦選擇圖片檔案，並將圖片載入到 PictureBox ，同時檢查圖片大小是否超過 5MB
         private void btnPCpicture_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -59,7 +60,8 @@ namespace P2PChat
             }
         }
 
-        /// 處理使用者點擊「從連結選擇圖片」按鈕的事件。會彈出一個輸入框，讓使用者輸入圖片的 URL，嘗試從該 URL 下載圖片並顯示在 PictureBox 中。
+        /// 點擊 從連結選擇圖片 按鈕
+        /// 會彈出一個輸入框，輸入圖片的 URL，嘗試從該 URL 下載圖片並顯示在 PictureBox 中
         private void btnlinkpicture_Click(object sender, EventArgs e)
         {
             using (Form inputForm = new Form())
@@ -116,7 +118,9 @@ namespace P2PChat
                 }
             }
         }
-        /// 使用者點擊「傳送」按鈕的事件。會將選定的圖片轉換為 Base64 字串，並透過 TcpClient 傳送給已連接的對方。如果沒有選擇圖片或未連接到對方，則顯示警告訊息。
+        /// 點擊 傳送 按鈕
+        /// 將圖片轉換為 Base64 字串，並透過 TcpClient 傳送給已連接的對方
+        /// 如果沒有選擇圖片或未連接到對方，則顯示警告訊息
         private void btnsend_Click(object sender, EventArgs e)
         {
             if (selectedImage == null)
@@ -156,7 +160,7 @@ namespace P2PChat
         {
             this.Close();
         }
-        /// 釋放已選擇圖片的資源，避免記憶體洩漏。
+        /// 釋放已選擇圖片的資源，避免記憶體洩漏
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);

@@ -161,7 +161,7 @@ namespace P2PChat
             }
         }
 
-        // 等待伺服器的連線確認訊號。會從網路資料流中讀取資料，直到收到特定的確認訊號（例如 "<ACCEPT_CHAT>"）或超時。
+        // 等待伺服器的連線確認訊號。會從網路資料流中讀取資料，直到收到特定的確認訊號（例如 "<ACCEPT_CHAT>"）或超時
         private async Task WaitForServerConfirmation(TcpClient client, CancellationToken cancellationToken)
         {
             NetworkStream stream = client.GetStream();
@@ -217,7 +217,7 @@ namespace P2PChat
             MessageBox.Show($"連接失敗：伺服器拒絕連線", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        // 計時器每秒觸發。更新進度視窗，並在計時結束時處理超時情況。
+        // 計時器每秒觸發。更新進度視窗，並在計時結束時處理超時情況
         private void ConnectionTimer_Tick(object sender, EventArgs e)
         {
             remainingSeconds--;
