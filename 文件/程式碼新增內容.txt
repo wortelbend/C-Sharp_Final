@@ -1,0 +1,9 @@
+1.新增傳送圖片後回傳->將自己傳送的圖片顯示在自己聊天室頁面的picturebox，確認圖片成功傳送
+
+2.新增頭像功能
+  
+  1-在connectform加上選擇圖片按鈕，到本機選擇本機的圖片(限制.jpg .png檔案 限制大小5MB)，選擇完後顯示在connectform的picturebox。
+
+  2-因為richTextBox 限制過多，無法顯示頭像圖片，所以在兩端的聊天室使用flowLayoutPanel取代RTB
+
+  2-連線後將圖片傳送到對方，傳送訊息時頭像取代原本的"我" & "對方" 並顯示在雙方的flowLayoutPanel(flpMessages)
