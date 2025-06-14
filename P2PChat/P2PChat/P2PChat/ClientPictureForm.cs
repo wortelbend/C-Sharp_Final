@@ -13,13 +13,17 @@ namespace P2PChat
         private TcpClient _connectedClient;
         private Image selectedImage;
 
+        // 這個屬性存放給外部使用的安全複本
+        public Image ClonedImage { get; private set; }
+
         public formpicture(TcpClient connectedClient)
         {
             InitializeComponent();
             _connectedClient = connectedClient;
             SetupEventHandlers();
         }
-        /// 用於設定視窗中所有按鈕的點擊事件處理器，將按鈕的 Click 事件與對應的方法連結起來
+
+        /// 用於設定視窗中所有按鈕
         private void SetupEventHandlers()
         {
             btnPCpicture.Click += btnPCpicture_Click;
@@ -27,8 +31,8 @@ namespace P2PChat
             btnsend.Click += btnsend_Click;
             btncancel.Click += btncancel_Click;
         }
-        /// 點擊 從電腦選擇圖片 按鈕
-        /// 開啟一個檔案對話框，從本機電腦選擇圖片檔案，並將圖片載入到 PictureBox ，同時檢查圖片大小是否超過 5MB
+
+        /// 從本機電腦選擇圖片
         private void btnPCpicture_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -60,8 +64,7 @@ namespace P2PChat
             }
         }
 
-        /// 點擊 從連結選擇圖片 按鈕
-        /// 會彈出一個輸入框，輸入圖片的 URL，嘗試從該 URL 下載圖片並顯示在 PictureBox 中
+        /// 從連結選擇圖片
         private void btnlinkpicture_Click(object sender, EventArgs e)
         {
             using (Form inputForm = new Form())
@@ -118,9 +121,8 @@ namespace P2PChat
                 }
             }
         }
+
         /// 點擊 傳送 按鈕
-        /// 將圖片轉換為 Base64 字串，並透過 TcpClient 傳送給已連接的對方
-        /// 如果沒有選擇圖片或未連接到對方，則顯示警告訊息
         private void btnsend_Click(object sender, EventArgs e)
         {
             if (selectedImage == null)
@@ -142,7 +144,9 @@ namespace P2PChat
                     if (_connectedClient?.Connected == true)
                     {
                         _connectedClient.GetStream().Write(data, 0, data.Length);
+                        this.ClonedImage = (Image)this.selectedImage.Clone();
                         MessageBox.Show("圖片已傳送", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
                         this.Close();
                     }
                     else
@@ -156,10 +160,12 @@ namespace P2PChat
                 MessageBox.Show("圖片傳送失敗: " + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         private void btncancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
+
         /// 釋放已選擇圖片的資源，避免記憶體洩漏
         protected override void OnFormClosing(FormClosingEventArgs e)
         {

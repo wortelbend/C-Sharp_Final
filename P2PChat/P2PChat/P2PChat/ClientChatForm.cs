@@ -48,6 +48,11 @@ namespace P2PChat
         private TcpClient _connectedClient;
         private Form _parentForm;
 
+        // vvv--- 新增變數 ---vvv
+        private Image myAvatar;
+        private Image remoteAvatar;
+        // ^^^--- 新增變數 ---^^^
+
         public ClientChatForm()
         {
             InitializeComponent();
@@ -66,7 +71,26 @@ namespace P2PChat
             thrReceiver.IsBackground = true;
             thrReceiver.Start();
 
-            AppendMessage("連線成功！");
+            AppendMessage("連線成功！", false);
+
+            SetupEventHandlers();
+        }
+
+        // 接收頭像
+        public ClientChatForm(TcpClient connectedClient, Form parentForm, Image avatar)
+        {
+            InitializeComponent();
+            _connectedClient = connectedClient;
+            _parentForm = parentForm;
+            this.myAvatar = avatar;
+            this.FormClosing += ChatForm_FormClosing;
+
+            thrReceiver = new Thread(new ThreadStart(ReceiverThread));
+            thrReceiver.IsBackground = true;
+            thrReceiver.Start();
+
+            AppendMessage("連線成功！", false);
+            SendAvatar();
 
             SetupEventHandlers();
         }
@@ -82,9 +106,32 @@ namespace P2PChat
             thrReceiver.IsBackground = true;
             thrReceiver.Start();
 
-            AppendMessage("連線成功！");
+            AppendMessage("連線成功！", false);
 
             SetupEventHandlers();
+        }
+
+        //傳送頭像
+        private void SendAvatar()
+        {
+            if (myAvatar == null || _connectedClient == null || !_connectedClient.Connected) return;
+
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    myAvatar.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    byte[] imageBytes = ms.ToArray();
+                    string base64Image = Convert.ToBase64String(imageBytes);
+                    string message = $"<AVATAR>{base64Image}</AVATAR>";
+                    byte[] data = Encoding.Unicode.GetBytes(message);
+                    _connectedClient.GetStream().Write(data, 0, data.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("傳送頭像失敗: " + ex.Message);
+            }
         }
 
         // 初始化網路設定，獲取本機主機名稱和 IP 位址
@@ -169,7 +216,7 @@ namespace P2PChat
                 {
                     byte[] data = Encoding.Unicode.GetBytes(predefinedMessage);
                     _connectedClient.GetStream().Write(data, 0, data.Length);
-                    AppendMessage("我: " + predefinedMessage);
+                    AppendMessageWithAvatar(myAvatar, predefinedMessage);
                 }
                 catch (Exception ex)
                 {
@@ -199,7 +246,7 @@ namespace P2PChat
 
                     if (!message.StartsWith("<IMAGE>"))
                     {
-                        AppendMessage("我: " + message);
+                        AppendMessageWithAvatar(myAvatar, message);
                     }
 
                     if (!message.StartsWith("<IMAGE>"))
@@ -212,7 +259,7 @@ namespace P2PChat
                     sktConnect.Send(data);
                     if (!message.StartsWith("<IMAGE>"))
                     {
-                        AppendMessage("我: " + message);
+                        AppendMessageWithAvatar(myAvatar, message);
                         txtMessage.Clear();
                     }
                 }
@@ -221,7 +268,7 @@ namespace P2PChat
                     sktClient.Send(data);
                     if (!message.StartsWith("<IMAGE>"))
                     {
-                        AppendMessage("我: " + message);
+                        AppendMessageWithAvatar(myAvatar, message);
                         txtMessage.Clear();
                     }
                 }
@@ -247,13 +294,13 @@ namespace P2PChat
                     thrReceiver = new Thread(new ThreadStart(ReceiverThread));
                     thrReceiver.IsBackground = true;
                     thrReceiver.Start();
-                    AppendMessage("接受了一個新的連接");
+                    AppendMessage("接受了一個新的連接", false);
                 }
             }
             catch
             {
                 if (isListening)
-                    AppendMessage("監聽器發生錯誤");
+                    AppendMessage("監聽器發生錯誤", false);
             }
         }
 
@@ -265,7 +312,7 @@ namespace P2PChat
         {
             if (_connectedClient == null || !_connectedClient.Connected)
             {
-                AppendMessage("接收執行緒啟動失敗：未建立連接");
+                AppendMessage("接收執行緒啟動失敗：未建立連接", false);
                 return;
             }
 
@@ -284,6 +331,29 @@ namespace P2PChat
 
                         string bufferStr = receiveBuffer.ToString();
 
+                        // --- 新增：處理頭像的邏輯 ---
+                        while (bufferStr.Contains("<AVATAR>") && bufferStr.Contains("</AVATAR>"))
+                        {
+                            int avatarStart = bufferStr.IndexOf("<AVATAR>");
+                            int avatarEnd = bufferStr.IndexOf("</AVATAR>");
+                            if (avatarStart != -1 && avatarEnd > avatarStart)
+                            {
+                                string base64Avatar = bufferStr.Substring(avatarStart + 8, avatarEnd - (avatarStart + 8));
+                                byte[] avatarBytes = Convert.FromBase64String(base64Avatar);
+                                using (MemoryStream ms = new MemoryStream(avatarBytes))
+                                {
+                                    // 複製一份，避免GDI+泛型錯誤
+                                    this.remoteAvatar = new Bitmap(Image.FromStream(ms));
+                                }
+
+                                // 從緩衝區移除頭像資料
+                                bufferStr = bufferStr.Substring(avatarEnd + 9);
+                                receiveBuffer.Clear();
+                                receiveBuffer.Append(bufferStr);
+                            }
+                            else break;
+                        }
+
                         while (bufferStr.Contains("<IMAGE>") && bufferStr.Contains("</IMAGE>"))
                         {
                             int imgStart = bufferStr.IndexOf("<IMAGE>");
@@ -293,7 +363,7 @@ namespace P2PChat
                                 string beforeImg = bufferStr.Substring(0, imgStart);
                                 if (!string.IsNullOrWhiteSpace(beforeImg))
                                 {
-                                    AppendMessage("對方: " + beforeImg);
+                                    AppendMessageWithAvatar(remoteAvatar, beforeImg);
                                 }
 
                                 string imageMessage = bufferStr.Substring(imgStart, imgEnd + 8 - imgStart);
@@ -311,7 +381,7 @@ namespace P2PChat
                                     }
                                 }));
 
-                                AppendMessage("對方傳送了圖片");
+                                AppendMessage("對方傳送了圖片", false);
 
                                 bufferStr = bufferStr.Substring(imgEnd + 8);
                                 receiveBuffer.Clear();
@@ -323,48 +393,11 @@ namespace P2PChat
                             }
                         }
 
-                        if (bufferStr.Contains("<IMAGE_URL>") && bufferStr.Contains("</IMAGE_URL>"))
-                        {
-                            int urlStart = bufferStr.IndexOf("<IMAGE_URL>");
-                            int urlEnd = bufferStr.IndexOf("</IMAGE_URL>");
-                            if (urlStart != -1 && urlEnd != -1 && urlEnd > urlStart)
-                            {
-                                string imageUrl = bufferStr.Substring(urlStart + 11, urlEnd - urlStart - 11);
-
-                                try
-                                {
-                                    using (WebClient client = new WebClient())
-                                    {
-                                        byte[] imageBytes = client.DownloadData(imageUrl);
-                                        this.Invoke((Action)(() =>
-                                        {
-                                            using (MemoryStream ms = new MemoryStream(imageBytes))
-                                            {
-                                                if (pictureBox1.Image != null)
-                                                    pictureBox1.Image.Dispose();
-                                                pictureBox1.Image = Image.FromStream(ms);
-                                                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-                                            }
-                                        }));
-                                    }
-                                    AppendMessage("對方傳送了圖片連結");
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show("圖片連結處理失敗: " + ex.Message, "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                }
-
-                                bufferStr = bufferStr.Substring(urlEnd + 12);
-                                receiveBuffer.Clear();
-                                receiveBuffer.Append(bufferStr);
-                            }
-                        }
-
-                        if (!bufferStr.Contains("<IMAGE>") && !string.IsNullOrWhiteSpace(bufferStr))
+                        if (!bufferStr.Contains("<IMAGE>") && !bufferStr.Contains("<AVATAR>") && !string.IsNullOrWhiteSpace(bufferStr))
                         {
                             if (bufferStr.Trim() == "<DISCONNECT>")
                             {
-                                AppendMessage("對方已經斷開連接");
+                                AppendMessage("對方已經斷開連接", false);
                                 if (_connectedClient != null)
                                 {
                                     try { _connectedClient.Close(); } catch { }
@@ -376,14 +409,14 @@ namespace P2PChat
                             }
                             else
                             {
-                                AppendMessage("對方: " + bufferStr);
+                                AppendMessageWithAvatar(remoteAvatar, bufferStr);
                                 receiveBuffer.Clear();
                             }
                         }
                     }
                     else if (received == 0)
                     {
-                        AppendMessage("連接已斷開 (對方關閉)");
+                        AppendMessage("連接已斷開 (對方關閉)", false);
                         break;
                     }
                 }
@@ -392,11 +425,11 @@ namespace P2PChat
             {
                 if (_connectedClient?.Connected == true)
                 {
-                    AppendMessage("接收錯誤: " + ex.Message);
+                    AppendMessage("接收錯誤: " + ex.Message, false);
                 }
                 else
                 {
-                    AppendMessage("連接已斷開");
+                    AppendMessage("連接已斷開", false);
                 }
             }
             finally
@@ -423,7 +456,7 @@ namespace P2PChat
                 thrListener.Abort();
                 thrListener = null;
             }
-            AppendMessage("停止監聽");
+            AppendMessage("停止監聽", false);
         }
 
         // 斷開與客戶端的連接，並清理相關的 Socket 資源
@@ -437,71 +470,85 @@ namespace P2PChat
             }
             if (_connectedClient == null)
             {
-                AppendMessage("已斷開連接");
+                AppendMessage("已斷開連接", false);
             }
         }
 
-        // 在聊天訊息框中添加新的訊息，並可選擇清空現有訊息
+        //顯示頭像和訊息
+        private void AppendMessageWithAvatar(Image avatar, string message)
+        {
+            if (flpMessages.InvokeRequired)
+            {
+                flpMessages.Invoke((MethodInvoker)delegate {
+                    AppendMessageWithAvatar(avatar, message);
+                });
+                return;
+            }
+            Panel messagePanel = new Panel
+            {
+                Width = flpMessages.ClientSize.Width - 25,
+                AutoSize = true,
+                Margin = new Padding(5)
+            };
+            PictureBox picAvatar = new PictureBox
+            {
+                Size = new Size(50, 50),
+                Location = new Point(3, 3),
+                SizeMode = PictureBoxSizeMode.Zoom,
+            };
+
+            if (avatar != null)
+            {
+                picAvatar.Image = new Bitmap(avatar);
+            }
+            Label lblMessage = new Label
+            {
+                Text = message,
+                Location = new Point(55, 5),
+                AutoSize = true,
+                MaximumSize = new Size(messagePanel.Width - 50, 0)
+            };
+            messagePanel.Controls.Add(picAvatar);
+            messagePanel.Controls.Add(lblMessage);
+            flpMessages.Controls.Add(messagePanel);
+            flpMessages.ScrollControlIntoView(messagePanel);
+        }
         private void AppendMessage(string message, bool clear = false)
         {
-            if (rtbMessages == null || rtbMessages.IsDisposed || this.IsDisposed || this.Disposing || !rtbMessages.IsHandleCreated) return;
-
-            // 將 isAtBottom 的判斷移到 Invoke 內部
-            // 這樣可以確保所有對 rtbMessages 的存取都在 UI 執行緒上進行
-            if (rtbMessages.InvokeRequired)
+            if (flpMessages.InvokeRequired)
             {
-                try
-                {
-                    rtbMessages.Invoke((MethodInvoker)delegate
-                    {
-                        if (rtbMessages != null && !rtbMessages.IsDisposed && !this.IsDisposed && !this.Disposing && rtbMessages.IsHandleCreated)
-                        {
-                            // 在 UI 執行緒中判斷是否在底部
-                            bool isAtBottom = rtbMessages.TextLength == rtbMessages.SelectionStart;
-
-                            if (clear)
-                                rtbMessages.Clear();
-                            else
-                                rtbMessages.AppendText(message + Environment.NewLine);
-
-                            // 只有當原本就在底部，或是清空後添加新訊息時，才自動滾動
-                            if (isAtBottom || clear)
-                            {
-                                rtbMessages.SelectionStart = rtbMessages.Text.Length;
-                                rtbMessages.ScrollToCaret();
-                            }
-                        }
-                    });
-                }
-                catch (ObjectDisposedException) { /* 忽略已處置物件的例外 */ }
-                catch (InvalidOperationException) { /* 忽略無效操作的例外 */ }
+                flpMessages.Invoke((MethodInvoker)delegate {
+                    AppendMessage(message, clear);
+                });
+                return;
             }
-            else
+
+            if (clear)
             {
-                // 在 UI 執行緒中判斷是否在底部
-                bool isAtBottom = rtbMessages.TextLength == rtbMessages.SelectionStart;
-
-                if (rtbMessages != null && !rtbMessages.IsDisposed && !this.IsDisposed && !this.Disposing && rtbMessages.IsHandleCreated)
-                {
-                    if (clear)
-                        rtbMessages.Clear();
-                    else
-                        rtbMessages.AppendText(message + Environment.NewLine);
-
-                    // 只有當原本就在底部，或是清空後添加新訊息時，才自動滾動
-                    if (isAtBottom || clear)
-                    {
-                        rtbMessages.SelectionStart = rtbMessages.Text.Length;
-                        rtbMessages.ScrollToCaret();
-                    }
-                }
+                flpMessages.Controls.Clear();
+                return;
             }
+            Label lblSystemMessage = new Label
+            {
+                Text = message,
+                AutoSize = true,
+                ForeColor = Color.Gray,
+                Font = new Font(this.Font, FontStyle.Italic),
+                Margin = new Padding(10),
+                Padding = new Padding(5)
+            };
+
+            flpMessages.Controls.Add(lblSystemMessage);
+            flpMessages.ScrollControlIntoView(lblSystemMessage);
         }
 
-        // 會清空聊天訊息框中的所有訊息
+        //清空聊天訊息框中的所有訊息
         private void btnclear_Click(object sender, EventArgs e)
         {
-            AppendMessage(null, true);
+            if (flpMessages != null)
+            {
+                flpMessages.Controls.Clear();
+            }
         }
 
         // 處理聊天視窗關閉的事件。彈出確認對話框，如果確認斷開連接，則會向對方發送斷開連接的訊息
@@ -555,17 +602,36 @@ namespace P2PChat
             }
         }
 
-        // 處理斷開連接按鈕的點擊事件，它會觸發視窗關閉事件
+        // 斷開連接按鈕
         private void btndisconnect_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        // 傳送圖片按鈕
+        // 傳送圖片按鈕的點擊事件
+        // 開啟一個新的圖片傳送視窗 讓使用者選擇圖片並傳送
+        // 新增 會等待圖片視窗關閉，並接收回傳的圖片以顯示在本地
         private void btnpicture_Click(object sender, EventArgs e)
         {
-            formpicture pictureForm = new formpicture(_connectedClient);
-            pictureForm.Show();
+            using (formpicture pictureForm = new formpicture(_connectedClient))
+            {
+                if (pictureForm.ShowDialog(this) == DialogResult.OK)
+                {
+                    Image receivedImage = pictureForm.ClonedImage;
+
+                    if (receivedImage != null)
+                    {
+                        if (pictureBox2.Image != null)
+                        {
+                            pictureBox2.Image.Dispose();
+                        }
+                        pictureBox2.Image = receivedImage;
+                        pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+
+                        AppendMessage("您傳送了一張圖片。", false);
+                    }
+                }
+            }
         }
 
         // 圖片按鈕
@@ -593,22 +659,22 @@ namespace P2PChat
                     FormBorderStyle = FormBorderStyle.None,
                     StartPosition = FormStartPosition.Manual,
                     ShowInTaskbar = false,
-                    TopMost = true
+                    TopMost = true,
+                    Padding = new Padding(3)
                 };
 
                 FlowLayoutPanel flowPanel = new FlowLayoutPanel
                 {
+                    Dock = DockStyle.Fill,
                     AutoScroll = true,
                     FlowDirection = FlowDirection.LeftToRight,
                     WrapContents = true,
-                    Size = new Size(300, 200),
-                    Padding = new Padding(5),
                     BackColor = Color.White
                 };
 
                 string[] emojis = new string[]
                 {
-                    "😊", "😂", "❤️", "👍", "🎉","😍", "😭", "🙏", "😎", "🤔","😡", "😴", "🤗", "😱", "😇","😘", "🥰",
+            "😊", "😂", "❤️", "👍", "🎉","😍", "😭", "🙏", "😎", "🤔","😡", "😴", "🤗", "😱", "😇","😘", "🥰",
                 };
 
                 foreach (string emoji in emojis)
@@ -616,18 +682,20 @@ namespace P2PChat
                     Button emojiButton = new Button
                     {
                         Text = emoji,
-                        Font = new Font("Segoe UI Emoji", 16F),
-                        Size = new Size(50, 50),
+                        Font = new Font(this.Font.FontFamily, 16F, FontStyle.Regular),
+                        Size = new Size(48, 48),
                         FlatStyle = FlatStyle.Flat,
                         Margin = new Padding(2)
                     };
 
                     emojiButton.FlatAppearance.BorderSize = 0;
-                    emojiButton.Click += (s, e) =>
+                    emojiButton.Click += (s, args) =>
                     {
                         if (txtMessage != null && !txtMessage.IsDisposed)
                         {
-                            txtMessage.SelectedText = emoji;
+                            var selectionIndex = txtMessage.SelectionStart;
+                            txtMessage.Text = txtMessage.Text.Insert(selectionIndex, emoji);
+                            txtMessage.SelectionStart = selectionIndex + emoji.Length;
                             txtMessage.Focus();
                         }
                         emojiForm.Close();
@@ -636,10 +704,10 @@ namespace P2PChat
                     flowPanel.Controls.Add(emojiButton);
                 }
 
+                emojiForm.Size = new Size(300, 200);
                 emojiForm.Controls.Add(flowPanel);
-                emojiForm.Size = flowPanel.Size;
                 emojiForm.Location = btnemoji.PointToScreen(new Point(0, btnemoji.Height));
-                emojiForm.Deactivate += (s, e) => emojiForm.Close();
+                emojiForm.Deactivate += (s, args) => emojiForm.Close();
                 emojiForm.Show();
             }
             catch (Exception ex)

@@ -18,7 +18,6 @@ namespace P2PChat
 
         private void InitializeComponent()
         {
-            rtbMessages = new RichTextBox();
             txtMessage = new TextBox();
             btnSend = new Button();
             txtchat1 = new TextBox();
@@ -36,21 +35,13 @@ namespace P2PChat
             btnreadpic = new Button();
             btnemoji = new Button();
             panel1 = new Panel();
+            pictureBox2 = new PictureBox();
+            label2 = new Label();
+            flpMessages = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
-            // 
-            // rtbMessages
-            // 
-            rtbMessages.BackColor = SystemColors.GradientActiveCaption;
-            rtbMessages.Font = new Font("新細明體", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            rtbMessages.Location = new Point(0, 2);
-            rtbMessages.Margin = new Padding(4);
-            rtbMessages.Name = "rtbMessages";
-            rtbMessages.ReadOnly = true;
-            rtbMessages.Size = new Size(572, 496);
-            rtbMessages.TabIndex = 2;
-            rtbMessages.Text = "";
             // 
             // txtMessage
             // 
@@ -145,10 +136,10 @@ namespace P2PChat
             // 
             btndisconnect.BackColor = SystemColors.Window;
             btndisconnect.Font = new Font("Microsoft JhengHei UI", 16F);
-            btndisconnect.Location = new Point(612, 463);
+            btndisconnect.Location = new Point(792, 481);
             btndisconnect.Margin = new Padding(4);
             btndisconnect.Name = "btndisconnect";
-            btndisconnect.Size = new Size(304, 35);
+            btndisconnect.Size = new Size(149, 35);
             btndisconnect.TabIndex = 11;
             btndisconnect.Text = "斷開連線";
             btndisconnect.UseVisualStyleBackColor = false;
@@ -157,10 +148,10 @@ namespace P2PChat
             // 
             btnclear.BackColor = SystemColors.Window;
             btnclear.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnclear.Location = new Point(612, 417);
+            btnclear.Location = new Point(580, 481);
             btnclear.Margin = new Padding(4);
             btnclear.Name = "btnclear";
-            btnclear.Size = new Size(304, 38);
+            btnclear.Size = new Size(149, 38);
             btnclear.TabIndex = 4;
             btnclear.Text = "清除聊天室";
             btnclear.UseVisualStyleBackColor = false;
@@ -171,7 +162,7 @@ namespace P2PChat
             pictureBox1.BackColor = SystemColors.ButtonShadow;
             pictureBox1.Location = new Point(574, 2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(376, 259);
+            pictureBox1.Size = new Size(376, 203);
             pictureBox1.TabIndex = 12;
             pictureBox1.TabStop = false;
             // 
@@ -179,7 +170,7 @@ namespace P2PChat
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Microsoft JhengHei UI", 16F);
-            label1.Location = new Point(685, 264);
+            label1.Location = new Point(682, 2);
             label1.Name = "label1";
             label1.Size = new Size(166, 28);
             label1.TabIndex = 13;
@@ -188,9 +179,9 @@ namespace P2PChat
             // btnpicture
             // 
             btnpicture.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnpicture.Location = new Point(792, 295);
+            btnpicture.Location = new Point(792, 436);
             btnpicture.Name = "btnpicture";
-            btnpicture.Size = new Size(124, 38);
+            btnpicture.Size = new Size(148, 38);
             btnpicture.TabIndex = 14;
             btnpicture.Text = "傳送圖片";
             btnpicture.UseVisualStyleBackColor = true;
@@ -208,9 +199,9 @@ namespace P2PChat
             // btnreadpic
             // 
             btnreadpic.Font = new Font("Microsoft JhengHei UI", 16F);
-            btnreadpic.Location = new Point(604, 295);
+            btnreadpic.Location = new Point(580, 436);
             btnreadpic.Name = "btnreadpic";
-            btnreadpic.Size = new Size(124, 38);
+            btnreadpic.Size = new Size(148, 38);
             btnreadpic.TabIndex = 16;
             btnreadpic.Text = "查看圖片";
             btnreadpic.UseVisualStyleBackColor = true;
@@ -243,6 +234,37 @@ namespace P2PChat
             panel1.Size = new Size(952, 95);
             panel1.TabIndex = 17;
             // 
+            // pictureBox2
+            // 
+            pictureBox2.BackColor = SystemColors.ButtonShadow;
+            pictureBox2.Location = new Point(574, 211);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(376, 219);
+            pictureBox2.TabIndex = 12;
+            pictureBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new Font("Microsoft JhengHei UI", 16F);
+            label2.Location = new Point(692, 405);
+            label2.Name = "label2";
+            label2.Size = new Size(144, 28);
+            label2.TabIndex = 13;
+            label2.Text = "我傳送的圖片";
+            // 
+            // flpMessages
+            // 
+            flpMessages.AutoScroll = true;
+            flpMessages.BackColor = SystemColors.GradientInactiveCaption;
+            flpMessages.FlowDirection = FlowDirection.TopDown;
+            flpMessages.Font = new Font("新細明體", 12F, FontStyle.Regular, GraphicsUnit.Point, 136);
+            flpMessages.Location = new Point(4, 2);
+            flpMessages.Name = "flpMessages";
+            flpMessages.Size = new Size(570, 497);
+            flpMessages.TabIndex = 18;
+            flpMessages.WrapContents = false;
+            // 
             // ClientChatForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -250,13 +272,15 @@ namespace P2PChat
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = SystemColors.Control;
             ClientSize = new Size(952, 621);
+            Controls.Add(flpMessages);
             Controls.Add(btnreadpic);
             Controls.Add(lblword);
             Controls.Add(btnpicture);
+            Controls.Add(label2);
             Controls.Add(label1);
+            Controls.Add(pictureBox2);
             Controls.Add(pictureBox1);
             Controls.Add(btndisconnect);
-            Controls.Add(rtbMessages);
             Controls.Add(btnclear);
             Controls.Add(panel1);
             Margin = new Padding(4);
@@ -265,11 +289,11 @@ namespace P2PChat
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
-        private System.Windows.Forms.RichTextBox rtbMessages;
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.Button btnSend;
         private TextBox txtchat1;
@@ -287,5 +311,8 @@ namespace P2PChat
         private Button btnreadpic;
         private Button btnemoji;
         private Panel panel1;
+        private PictureBox pictureBox2;
+        private Label label2;
+        private FlowLayoutPanel flpMessages;
     }
 }

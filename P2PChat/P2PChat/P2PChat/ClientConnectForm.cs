@@ -16,6 +16,7 @@ namespace P2PChat
         private int remainingSeconds = 30;
         private TcpClient tcpClient;
         private Form progressForm;
+        private Image myAvatar;
 
         public ClientConnectForm()
         {
@@ -23,6 +24,38 @@ namespace P2PChat
             InitializeTimer();
             btnEnableTCP.Click += btnEnableTCP_Click;
             this.VisibleChanged += Form1_VisibleChanged;
+            btnavater.Click += btnavatar_Click;
+        }
+
+        // 新增頭像 限制5MB  限制檔案類型.jpg .jpeg .png
+        private void btnavatar_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;";
+                ofd.Title = "請選擇您的頭像";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    const long maxSizeInBytes = 5 * 1024 * 1024;
+                    FileInfo fileInfo = new FileInfo(ofd.FileName);
+                    if (fileInfo.Length > maxSizeInBytes)
+                    {
+                        MessageBox.Show(
+                            $"選擇的頭像檔案大小為 {(fileInfo.Length / 1024.0 / 1024.0):F2} MB，\n已超過 5MB 的上限，請選擇較小的圖片。",
+                            "檔案過大",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        return;
+                    }
+                    myAvatar = Image.FromFile(ofd.FileName);
+                    if (this.Controls.ContainsKey("pictureBox2") && this.Controls["pictureBox2"] is PictureBox pbox)
+                    {
+                        if (pbox.Image != null) pbox.Image.Dispose();
+                        pbox.Image = new Bitmap(myAvatar);
+                        pbox.SizeMode = PictureBoxSizeMode.Zoom;
+                    }
+                }
+            }
         }
 
         // 初始化計時器，每秒觸發一次
@@ -62,17 +95,14 @@ namespace P2PChat
                 AutoSize = true,
                 Location = new Point(20, 20)
             });
-
-            // FormClosed 事件處理器：當進度視窗關閉時觸發
             progressForm.FormClosed += ProgressForm_FormClosed;
-
             progressForm.Show();
         }
 
         // 當進度視窗關閉時，重新啟用連接按鈕並清除 progressForm 引用
         private void ProgressForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (btnEnableTCP != null && !btnEnableTCP.IsDisposed) 
+            if (btnEnableTCP != null && !btnEnableTCP.IsDisposed)
             {
                 btnEnableTCP.Enabled = true;
             }
@@ -91,9 +121,19 @@ namespace P2PChat
         // 嘗試建立一個 TCP 連接，在連接過程中顯示進度視窗和倒數計時
         private async void btnEnableTCP_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtClientIP.Text) || string.IsNullOrEmpty(txtClientPORT.Text))
+            if (myAvatar == null)
             {
-                MessageBox.Show("請輸入IP地址和Port", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("您尚未選擇頭像，請點擊選擇頭像按鈕選擇圖片。", "未選擇頭像", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(txtClientIP.Text))
+            {
+                MessageBox.Show("請輸入IP地址", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(txtClientPORT.Text))
+            {
+                MessageBox.Show("請輸入Port", "錯誤", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -114,7 +154,6 @@ namespace P2PChat
                         await Task.WhenAny(connectTask, Task.Delay(30000, cts.Token));
                         if (!connectTask.IsCompleted) throw new TimeoutException("連接超時");
                         if (!tcpClient.Connected) throw new SocketException((int)SocketError.ConnectionRefused);
-                        // 連線成功後，等待伺服器的確認訊號
                         await WaitForServerConfirmation(tcpClient, cts.Token);
 
                     }
@@ -131,8 +170,7 @@ namespace P2PChat
                 connectionTimer.Stop();
                 progressForm?.Close();
                 MessageBox.Show("連線已接受", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                new ClientChatForm(tcpClient, this).Show();
+                new ClientChatForm(tcpClient, this, myAvatar).Show();
                 this.Hide();
             }
             catch (Exception ex)
@@ -143,7 +181,6 @@ namespace P2PChat
                     connectionTimer.Stop();
                     btnEnableTCP.Enabled = true;
                     progressForm?.Close();
-                    // 被拒絕訊息
                     MessageBox.Show("找無伺服器", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else if (ex is TimeoutException)
@@ -151,7 +188,6 @@ namespace P2PChat
                     connectionTimer.Stop();
                     btnEnableTCP.Enabled = true;
                     progressForm?.Close();
-                    // 連接超時訊息
                     MessageBox.Show("連接超時，伺服器無回應", "連線失敗", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
@@ -182,30 +218,25 @@ namespace P2PChat
                             // 檢查是否收到了接受訊號
                             if (receivedData.ToString().Contains("<ACCEPT_CHAT>"))
                             {
-                                return; 
+                                return;
                             }
                         }
                         else if (bytesRead == 0)
                         {
-                            // 連線已被遠端關閉
                             throw new SocketException((int)SocketError.ConnectionAborted);
                         }
                     }
-                    // 迴圈結束是因取消，表示超時
                     cancellationToken.ThrowIfCancellationRequested();
                 }
             }
             catch (OperationCanceledException)
             {
-                // 讀取超時或外部取消
                 throw new TimeoutException("等待伺服器確認超時。");
             }
             catch (Exception ex)
             {
-                // 處理其他讀取錯誤
                 throw new Exception($"接收伺服器確認訊號錯誤: {ex.Message}", ex);
             }
-
         }
 
         // 連接失敗錯誤。停止計時器，啟用連接按鈕，關閉進度視窗，顯示錯誤訊息。
