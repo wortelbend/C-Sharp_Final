@@ -18,7 +18,6 @@ namespace P2PChat
 
         private void InitializeComponent()
         {
-            this.rtbMessages = new System.Windows.Forms.RichTextBox();
             this.txtMessage = new System.Windows.Forms.TextBox();
             this.btnSend = new System.Windows.Forms.Button();
             this.txtchat1 = new System.Windows.Forms.TextBox();
@@ -36,20 +35,13 @@ namespace P2PChat
             this.btnreadpic = new System.Windows.Forms.Button();
             this.btnemoji = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.flpMessages = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
-            // 
-            // rtbMessages
-            // 
-            this.rtbMessages.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.rtbMessages.Font = new System.Drawing.Font("新細明體", 12F);
-            this.rtbMessages.Location = new System.Drawing.Point(0, 2);
-            this.rtbMessages.Name = "rtbMessages";
-            this.rtbMessages.ReadOnly = true;
-            this.rtbMessages.Size = new System.Drawing.Size(571, 491);
-            this.rtbMessages.TabIndex = 2;
-            this.rtbMessages.Text = "";
             // 
             // txtMessage
             // 
@@ -145,9 +137,9 @@ namespace P2PChat
             // 
             this.btndisconnect.BackColor = System.Drawing.SystemColors.Window;
             this.btndisconnect.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btndisconnect.Location = new System.Drawing.Point(601, 448);
+            this.btndisconnect.Location = new System.Drawing.Point(792, 481);
             this.btndisconnect.Name = "btndisconnect";
-            this.btndisconnect.Size = new System.Drawing.Size(304, 35);
+            this.btndisconnect.Size = new System.Drawing.Size(149, 35);
             this.btndisconnect.TabIndex = 11;
             this.btndisconnect.Text = "斷開連線";
             this.btndisconnect.UseVisualStyleBackColor = false;
@@ -156,9 +148,9 @@ namespace P2PChat
             // 
             this.btnclear.BackColor = System.Drawing.SystemColors.Window;
             this.btnclear.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnclear.Location = new System.Drawing.Point(601, 391);
+            this.btnclear.Location = new System.Drawing.Point(592, 479);
             this.btnclear.Name = "btnclear";
-            this.btnclear.Size = new System.Drawing.Size(304, 38);
+            this.btnclear.Size = new System.Drawing.Size(149, 38);
             this.btnclear.TabIndex = 4;
             this.btnclear.Text = "清除聊天室";
             this.btnclear.UseVisualStyleBackColor = false;
@@ -169,7 +161,7 @@ namespace P2PChat
             this.pictureBox1.Location = new System.Drawing.Point(570, 2);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(380, 259);
+            this.pictureBox1.Size = new System.Drawing.Size(380, 218);
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
             // 
@@ -177,7 +169,7 @@ namespace P2PChat
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.label1.Location = new System.Drawing.Point(680, 263);
+            this.label1.Location = new System.Drawing.Point(678, 2);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(166, 28);
             this.label1.TabIndex = 13;
@@ -187,10 +179,10 @@ namespace P2PChat
             // 
             this.btnpicture.BackColor = System.Drawing.SystemColors.Window;
             this.btnpicture.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnpicture.Location = new System.Drawing.Point(826, 293);
+            this.btnpicture.Location = new System.Drawing.Point(792, 436);
             this.btnpicture.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnpicture.Name = "btnpicture";
-            this.btnpicture.Size = new System.Drawing.Size(108, 38);
+            this.btnpicture.Size = new System.Drawing.Size(148, 38);
             this.btnpicture.TabIndex = 14;
             this.btnpicture.Text = "傳送圖片";
             this.btnpicture.UseVisualStyleBackColor = false;
@@ -209,10 +201,10 @@ namespace P2PChat
             // 
             this.btnreadpic.BackColor = System.Drawing.SystemColors.Window;
             this.btnreadpic.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
-            this.btnreadpic.Location = new System.Drawing.Point(592, 293);
+            this.btnreadpic.Location = new System.Drawing.Point(592, 436);
             this.btnreadpic.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnreadpic.Name = "btnreadpic";
-            this.btnreadpic.Size = new System.Drawing.Size(124, 38);
+            this.btnreadpic.Size = new System.Drawing.Size(149, 38);
             this.btnreadpic.TabIndex = 8;
             this.btnreadpic.Text = "查看圖片";
             this.btnreadpic.UseVisualStyleBackColor = false;
@@ -244,32 +236,65 @@ namespace P2PChat
             this.panel1.Size = new System.Drawing.Size(952, 100);
             this.panel1.TabIndex = 16;
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackColor = System.Drawing.SystemColors.ButtonShadow;
+            this.pictureBox2.Location = new System.Drawing.Point(570, 224);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(380, 208);
+            this.pictureBox2.TabIndex = 12;
+            this.pictureBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft JhengHei UI", 16F);
+            this.label2.Location = new System.Drawing.Point(678, 404);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(144, 28);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "我傳送的圖片";
+            // 
+            // flpMessages
+            // 
+            this.flpMessages.AutoScroll = true;
+            this.flpMessages.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.flpMessages.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpMessages.Font = new System.Drawing.Font("新細明體", 12F);
+            this.flpMessages.Location = new System.Drawing.Point(3, 2);
+            this.flpMessages.Name = "flpMessages";
+            this.flpMessages.Size = new System.Drawing.Size(568, 491);
+            this.flpMessages.TabIndex = 17;
+            this.flpMessages.WrapContents = false;
+            // 
             // ChatForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(952, 621);
+            this.Controls.Add(this.flpMessages);
             this.Controls.Add(this.lblword);
             this.Controls.Add(this.btnclear);
             this.Controls.Add(this.btnpicture);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btndisconnect);
             this.Controls.Add(this.btnreadpic);
-            this.Controls.Add(this.rtbMessages);
             this.Controls.Add(this.panel1);
             this.Name = "ChatForm";
             this.Text = "P2P 聊天(伺服器端)";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
-        private System.Windows.Forms.RichTextBox rtbMessages;
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.Button btnSend;
         private TextBox txtchat1;
@@ -287,5 +312,8 @@ namespace P2PChat
         private Button btnreadpic;
         private Button btnemoji;
         private Panel panel1;
+        private PictureBox pictureBox2;
+        private Label label2;
+        private FlowLayoutPanel flpMessages;
     }
 }

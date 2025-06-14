@@ -11,7 +11,10 @@ namespace P2PServer
     public partial class ServerPictureForm : Form
     {
         private TcpClient _connectedClient;
-        private Image selectedImage;
+        private Image selectedImage; // 這是會被釋放的原始圖片
+
+        // 這個屬性存放給外部使用的安全複本
+        public Image ClonedImage { get; private set; }
 
         public ServerPictureForm(TcpClient connectedClient)
         {
@@ -137,7 +140,12 @@ namespace P2PServer
                     if (_connectedClient?.Connected == true)
                     {
                         _connectedClient.GetStream().Write(data, 0, data.Length);
+
+                        // 在視窗關閉前，先建立好圖片的複本給呼叫端
+                        this.ClonedImage = (Image)this.selectedImage.Clone();
+
                         MessageBox.Show("圖片已傳送", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.DialogResult = DialogResult.OK;
                         this.Close();
                     }
                     else
@@ -160,6 +168,7 @@ namespace P2PServer
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
+            // 這裡只會釋放原始圖片，不會影響到已經複製出去的 ClonedImage
             if (selectedImage != null)
             {
                 selectedImage.Dispose();
