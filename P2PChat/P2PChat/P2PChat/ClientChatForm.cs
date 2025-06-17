@@ -501,9 +501,11 @@ namespace P2PChat
             {
                 picAvatar.Image = new Bitmap(avatar);
             }
+            string prefix = (avatar == myAvatar) ? "我: " : "對方: ";
+
             Label lblMessage = new Label
             {
-                Text = message,
+                Text = prefix + message,
                 Location = new Point(55, 5),
                 AutoSize = true,
                 MaximumSize = new Size(messagePanel.Width - 50, 0)
